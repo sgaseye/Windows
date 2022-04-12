@@ -1,0 +1,56 @@
+AD Enum
+
+1
+Windapsearch tool
+
+python3 windapsearch.py -d <domain.local> --dc-ip <domain-ip> -U -o data -u <domian\\user> -p <passwd>
+   
+   find all username in particular domain using -U
+            groups                              -G 
+if you want to impersonate anybody - lets say if we have ip of computer that has been for domain-admin    --unconstraineed-computer           
+            [-U] + [-G] + [--unconstrained-computers]
+            
+2            
+LDAPdomaindump
+
+python3 ldapdomaindump.py --user <domain\\user> -p <passwd> ldap://<domain-ip> --no-json --no-grep -O data
+
+
+3
+enum4linux -u <username> -p <passwd> -a <ip>                    --------- helpful without knowing password
+
+
+4
+nmap -p 389 --script ldap-search --script-args 'ldap.username="cn = ippsec, cn =user, dc = pentesting, dc = local"', ldap.password = <passwd123>, ldap.qfilter = users, ldap.attrib = SAMAccountName' <IP>  -Pn 
+
+
+
+5
+GetADUsers.py --impacket script
+GetADUsers.py -all -dc-ip <ip> <domain/user>
+you can alson use constrained delegation and GetUserSPN.py
+
+
+
+6
+Powerview              -------after exporting powerview you can directly run these function in powershell
+Get-Net Domain
+Get-Net Domain -Domain()
+Get Domain SID 
+Get Domain Policy
+Get-Net DomainController
+Get-Net User | select cn -username <name>           --------list of all users in current domain
+Get -UserProperty -properties                  ---------list of all properties for user
+   [in real company domain, if you get someone who didnt set his password for long , it may be honey trap ]
+   [Also if someone dont have bad prod count or logoncount, it might be decoy or honeytrap]
+
+
+
+
+7
+AD powershell module
+Get-ADDomain
+Get-ADDomain -Identify <DomainName>
+(Get-ADDOmain).DomainSID 
+(Get-DomainPolicy)."system access"           
+ 

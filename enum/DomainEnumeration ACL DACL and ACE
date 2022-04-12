@@ -1,0 +1,78 @@
+Domain Enumeration
+
+open powershell
+import-module .\Powerview.ps1
+powershell -ep bypass
+SET-Item()               see amsi bypass 
+
+
+Get-Domainuser
+Get-DomainUser -Name Jenkinadmin
+               -SPN (Service accounts)
+               -Properties samaccountname -member
+                                          -description
+Get-DomainGroup -Name "Domain-Admins"
+                -Domain "pentesting.local"
+                -GroupMenber "Doamin-admins" -Recurse
+                --username jenkinadmins
+                
+Get-DomainComputer
+                   -OperatingSystem "*Server2008*"
+                                           2012
+                                           2016 
+                   - Ping
+                   
+Get-DomainGPO | select displayname
+                select name
+                -name testing
+              -ComputerNmae student1, AD, DC 
+              
+Get-Domain
+Get-ForestGlobalCatalog
+Get-DomainOU
+
+
+DomainShareenum
+
+
+find-Domainshare -verbose
+cd \\fileshare.penesting.local\fileshare > dir
+
+Invoke-FileFinder -verbose
+
+
+
+
+
+
+
+
+
+
+
+
+ACE ACL DACL
+
+Go to advanced security Settings for user
+DACL -permissions who is allowed or denied access
+SACL - Auditing (basically these are logs)
+Security Principals - who is allowed to do something or not
+ACE these are entries for each principal regarding which acl they fall in
+
+Get-ObjectAcl -SamAccountName student1 -ResolveGUIDS
+
+
+It will give all the acl allotted to this user and permission given for each acl  
+objectDN  --- who the object is (info about user)
+objectSID --- user sid
+activedirectoryrights  ---- GenericAll i.e. this user sid holder has full access of object student1 , Generic Read , Generic write ,Generic execute
+ace qualifier ---  access allowed 
+
+
+Get-DomainUser -Name student1
+
+Get-ObjectAcl -SamAccountName 'Domain Admins' -ResolveGUIDS
+
+Add -DomainGroupMember -Identify 'Domain Admins' Member 'student1' -Domain pentesting
+
+Get-ObjectAcl -SamAccountName * -ResolveGUIDS | ?{($_.ActiveDirectoryRights -match 'Generic Write') -and ($_. SecurityIdentifier -match '<SID>')}
