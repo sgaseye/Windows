@@ -1,0 +1,176 @@
+[{
+    "attributes": {
+        "auditingPolicy": [
+            "\u0000\u0001"
+        ],
+        "creationTime": [
+            "2022-03-02 03:45:08.006111+00:00"
+        ],
+        "dSASignature": [
+            {
+                "encoded": "AQAAACgAAAAAAAAAAAAAAAAAAAAAAAAAxW99uThEzEiAOBtO2X5PgQ==",
+                "encoding": "base64"
+            }
+        ],
+        "dSCorePropagationData": [
+            "1601-01-01 00:00:00+00:00"
+        ],
+        "dc": [
+            "windcorp"
+        ],
+        "distinguishedName": [
+            "DC=windcorp,DC=thm"
+        ],
+        "fSMORoleOwner": [
+            "CN=NTDS Settings,CN=FIRE,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "forceLogoff": [
+            -9223372036854775808
+        ],
+        "gPLink": [
+            "[LDAP://CN={31B2F340-016D-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=windcorp,DC=thm;0]"
+        ],
+        "instanceType": [
+            5
+        ],
+        "isCriticalSystemObject": [
+            true
+        ],
+        "lockOutObservationWindow": [
+            "0:02:00"
+        ],
+        "lockoutDuration": [
+            "0:02:00"
+        ],
+        "lockoutThreshold": [
+            5
+        ],
+        "masteredBy": [
+            "CN=NTDS Settings,CN=FIRE,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "maxPwdAge": [
+            "42 days, 0:00:00"
+        ],
+        "minPwdAge": [
+            "1 day, 0:00:00"
+        ],
+        "minPwdLength": [
+            7
+        ],
+        "modifiedCount": [
+            1
+        ],
+        "modifiedCountAtLastProm": [
+            0
+        ],
+        "ms-DS-MachineAccountQuota": [
+            10
+        ],
+        "msDS-AllUsersTrustQuota": [
+            1000
+        ],
+        "msDS-Behavior-Version": [
+            7
+        ],
+        "msDS-ExpirePasswordsOnSmartCardOnlyAccounts": [
+            true
+        ],
+        "msDS-IsDomainFor": [
+            "CN=NTDS Settings,CN=FIRE,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "msDS-NcType": [
+            0
+        ],
+        "msDS-PerUserTrustQuota": [
+            1
+        ],
+        "msDS-PerUserTrustTombstonesQuota": [
+            10
+        ],
+        "msDs-masteredBy": [
+            "CN=NTDS Settings,CN=FIRE,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "nTMixedDomain": [
+            0
+        ],
+        "name": [
+            "windcorp"
+        ],
+        "nextRid": [
+            1000
+        ],
+        "objectCategory": [
+            "CN=Domain-DNS,CN=Schema,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "objectClass": [
+            "top",
+            "domain",
+            "domainDNS"
+        ],
+        "objectGUID": [
+            "{3fba0196-bc8f-44f2-8b8f-ecb8698a7c22}"
+        ],
+        "objectSid": [
+            "S-1-5-21-555431066-3599073733-176599750"
+        ],
+        "otherWellKnownObjects": [
+            "B:32:683A24E2E8164BD3AF86AC3C2CF3F981:CN=Keys,DC=windcorp,DC=thm",
+            "B:32:1EB93889E40C45DF9F0C64D23BBB6237:CN=Managed Service Accounts,DC=windcorp,DC=thm"
+        ],
+        "pwdHistoryLength": [
+            24
+        ],
+        "pwdProperties": [
+            17
+        ],
+        "rIDManagerReference": [
+            "CN=RID Manager$,CN=System,DC=windcorp,DC=thm"
+        ],
+        "replUpToDateVector": [
+            {
+                "encoded": "AgAAAAAAAAACAAAAAAAAAAyrzCAaUH1Jp+nGU4EtwTh5gAEAAAAAAPRQxBQDAAAAxW99uThEzEiAOBtO2X5PgZwzAQAAAAAA61W/FAMAAAA=",
+                "encoding": "base64"
+            }
+        ],
+        "serverState": [
+            1
+        ],
+        "subRefs": [
+            "DC=DomainDnsZones,DC=windcorp,DC=thm",
+            "DC=ForestDnsZones,DC=windcorp,DC=thm",
+            "CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "systemFlags": [
+            -1946157056
+        ],
+        "uASCompat": [
+            1
+        ],
+        "uSNChanged": [
+            204845
+        ],
+        "uSNCreated": [
+            4099
+        ],
+        "wellKnownObjects": [
+            "B:32:6227F0AF1FC2410D8E3BB10615BB5B0F:CN=NTDS Quotas,DC=windcorp,DC=thm",
+            "B:32:F4BE92A4C777485E878E9421D53087DB:CN=Microsoft,CN=Program Data,DC=windcorp,DC=thm",
+            "B:32:09460C08AE1E4A4EA0F64AEE7DAA1E5A:CN=Program Data,DC=windcorp,DC=thm",
+            "B:32:22B70C67D56E4EFB91E9300FCA3DC1AA:CN=ForeignSecurityPrincipals,DC=windcorp,DC=thm",
+            "B:32:18E2EA80684F11D2B9AA00C04F79F805:CN=Deleted Objects,DC=windcorp,DC=thm",
+            "B:32:2FBAC1870ADE11D297C400C04FD8D5CD:CN=Infrastructure,DC=windcorp,DC=thm",
+            "B:32:AB8153B7768811D1ADED00C04FD8D5CD:CN=LostAndFound,DC=windcorp,DC=thm",
+            "B:32:AB1D30F3768811D1ADED00C04FD8D5CD:CN=System,DC=windcorp,DC=thm",
+            "B:32:A361B2FFFFD211D1AA4B00C04FD7D83A:OU=Domain Controllers,DC=windcorp,DC=thm",
+            "B:32:AA312825768811D1ADED00C04FD8D5CD:CN=Computers,DC=windcorp,DC=thm",
+            "B:32:A9D1CA15768811D1ADED00C04FD8D5CD:CN=Users,DC=windcorp,DC=thm"
+        ],
+        "whenChanged": [
+            "2022-03-02 03:45:08+00:00"
+        ],
+        "whenCreated": [
+            "2020-04-30 15:11:00+00:00"
+        ]
+    },
+    "dn": "DC=windcorp,DC=thm"
+}]

@@ -1,0 +1,2 @@
+distinguishedName	lockOutObservationWindow	lockoutDuration	lockoutThreshold	maxPwdAge	minPwdAge	minPwdLength	pwdHistoryLength	pwdProperties	ms-DS-MachineAccountQuota
+DC=windcorp,DC=thm	2.0 minutes	2.0 minutes	5	42.00 days	1.00 days	7	24	PASSWORD_COMPLEX, PASSWORD_STORE_CLEARTEXT	10

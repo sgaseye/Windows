@@ -1,0 +1,2 @@
+cn	sAMAccountName	dNSHostName	operatingSystem	operatingSystemServicePack	operatingSystemVersion	lastLogon	userAccountControl	whenCreated	objectSid	description
+FIRE	FIRE$	Fire.windcorp.thm	Windows Server 2019 Standard		10.0 (17763)	03/02/22 03:51:33	SERVER_TRUST_ACCOUNT, TRUSTED_FOR_DELEGATION	04/30/20 15:11:47	S-1-5-21-555431066-3599073733-176599750-1000	

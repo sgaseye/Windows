@@ -1,0 +1,153 @@
+[{
+    "attributes": {
+        "accountExpires": [
+            "9999-12-31 23:59:59.999999+00:00"
+        ],
+        "badPasswordTime": [
+            "1601-01-01 00:00:00+00:00"
+        ],
+        "badPwdCount": [
+            0
+        ],
+        "cn": [
+            "FIRE"
+        ],
+        "codePage": [
+            0
+        ],
+        "countryCode": [
+            0
+        ],
+        "dNSHostName": [
+            "Fire.windcorp.thm"
+        ],
+        "dSCorePropagationData": [
+            "2020-04-30 15:11:48+00:00",
+            "1601-01-01 00:00:01+00:00"
+        ],
+        "distinguishedName": [
+            "CN=FIRE,OU=Domain Controllers,DC=windcorp,DC=thm"
+        ],
+        "instanceType": [
+            4
+        ],
+        "isCriticalSystemObject": [
+            true
+        ],
+        "lastLogoff": [
+            "1601-01-01 00:00:00+00:00"
+        ],
+        "lastLogon": [
+            "2022-03-02 03:51:33.953615+00:00"
+        ],
+        "lastLogonTimestamp": [
+            "2022-03-02 03:45:47.896717+00:00"
+        ],
+        "localPolicyFlags": [
+            0
+        ],
+        "logonCount": [
+            197
+        ],
+        "msDFSR-ComputerReferenceBL": [
+            "CN=FIRE,CN=Topology,CN=Domain System Volume,CN=DFSR-GlobalSettings,CN=System,DC=windcorp,DC=thm"
+        ],
+        "msDS-GenerationId": [
+            "L\u0014eU\u0497v%"
+        ],
+        "msDS-SupportedEncryptionTypes": [
+            28
+        ],
+        "name": [
+            "FIRE"
+        ],
+        "objectCategory": [
+            "CN=Computer,CN=Schema,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "objectClass": [
+            "top",
+            "person",
+            "organizationalPerson",
+            "user",
+            "computer"
+        ],
+        "objectGUID": [
+            "{816685d9-50db-488d-943b-1f4ec7ef3406}"
+        ],
+        "objectSid": [
+            "S-1-5-21-555431066-3599073733-176599750-1000"
+        ],
+        "operatingSystem": [
+            "Windows Server 2019 Standard"
+        ],
+        "operatingSystemVersion": [
+            "10.0 (17763)"
+        ],
+        "primaryGroupID": [
+            516
+        ],
+        "pwdLastSet": [
+            "2022-03-02 03:45:30.677963+00:00"
+        ],
+        "rIDSetReferences": [
+            "CN=RID Set,CN=FIRE,OU=Domain Controllers,DC=windcorp,DC=thm"
+        ],
+        "sAMAccountName": [
+            "FIRE$"
+        ],
+        "sAMAccountType": [
+            805306369
+        ],
+        "serverReferenceBL": [
+            "CN=FIRE,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=windcorp,DC=thm"
+        ],
+        "servicePrincipalName": [
+            "Hyper-V Replica Service/FIRE",
+            "Hyper-V Replica Service/Fire.windcorp.thm",
+            "Microsoft Virtual System Migration Service/FIRE",
+            "Microsoft Virtual System Migration Service/Fire.windcorp.thm",
+            "Microsoft Virtual Console Service/FIRE",
+            "Microsoft Virtual Console Service/Fire.windcorp.thm",
+            "TERMSRV/FIRE",
+            "TERMSRV/Fire.windcorp.thm",
+            "WSMAN/Fire",
+            "WSMAN/Fire.windcorp.thm",
+            "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Fire.windcorp.thm",
+            "ldap/Fire.windcorp.thm/DomainDnsZones.windcorp.thm",
+            "ldap/Fire.windcorp.thm/ForestDnsZones.windcorp.thm",
+            "DNS/Fire.windcorp.thm",
+            "GC/Fire.windcorp.thm/windcorp.thm",
+            "RestrictedKrbHost/Fire.windcorp.thm",
+            "RestrictedKrbHost/FIRE",
+            "RPC/b97d6fc5-4438-48cc-8038-1b4ed97e4f81._msdcs.windcorp.thm",
+            "HOST/FIRE/WINDCORP",
+            "HOST/Fire.windcorp.thm/WINDCORP",
+            "HOST/FIRE",
+            "HOST/Fire.windcorp.thm",
+            "HOST/Fire.windcorp.thm/windcorp.thm",
+            "E3514235-4B06-11D1-AB04-00C04FC2DCD2/b97d6fc5-4438-48cc-8038-1b4ed97e4f81/windcorp.thm",
+            "ldap/FIRE/WINDCORP",
+            "ldap/b97d6fc5-4438-48cc-8038-1b4ed97e4f81._msdcs.windcorp.thm",
+            "ldap/Fire.windcorp.thm/WINDCORP",
+            "ldap/FIRE",
+            "ldap/Fire.windcorp.thm",
+            "ldap/Fire.windcorp.thm/windcorp.thm"
+        ],
+        "uSNChanged": [
+            204849
+        ],
+        "uSNCreated": [
+            12293
+        ],
+        "userAccountControl": [
+            532480
+        ],
+        "whenChanged": [
+            "2022-03-02 03:45:47+00:00"
+        ],
+        "whenCreated": [
+            "2020-04-30 15:11:47+00:00"
+        ]
+    },
+    "dn": "CN=FIRE,OU=Domain Controllers,DC=windcorp,DC=thm"
+}]
