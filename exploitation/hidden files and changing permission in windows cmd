@@ -1,0 +1,113 @@
+To open CMD, you can either use the Windows Run tool by pressing WIN + R and then typing in CMD—or you can search for “CMD” in the Windows toolbar.
+
+Then you can navigate to the folder of your choice by using the basic dir command.
+
+That said, CMD also hides hidden files and folders by default. Because of that, it’s not enough to type in dir C:your-folder as this will only show visible files.
+
+To show hidden files, you need to include the /a:h modifier in that command. So, 
+
+dir /a:h C:your-folder 
+
+
+
+
+changing permission in cmd in windows
+
+
+I try the below way and it work for me:
+1. open cmd.exe
+2. takeown /R /F *.*
+3. icacls * /T /grant [username]:(D)
+4. del *.* /S /Q
+
+So that the files can become my own access and it assign to "Delete" and then I can delete the files and folders.
+
+
+
+
+
+
+As of Vista, cacls is deprecated. Here's the first couple of help lines:
+
+C:\>cacls
+NOTE: Cacls is now deprecated, please use Icacls.
+
+Displays or modifies access control lists (ACLs) of files
+
+You should use icacls instead. This is how you grant John full control over D:\test folder and all its subfolders:
+
+C:\>icacls "D:\test" /grant John:(OI)(CI)F /T
+
+According do MS documentation:
+
+    F = Full Control
+    CI = Container Inherit - This flag indicates that subordinate containers will inherit this ACE.
+    OI = Object Inherit - This flag indicates that subordinate files will inherit the ACE.
+    /T = Apply recursively to existing files and sub-folders. (OI and CI only apply to new files and sub-folders). Credit: comment by @AlexSpence.
+
+For complete documentation, you may run "icacls" with no arguments or see the Microsoft documentation here and here
+
+Use cacls command. See information here.
+
+    CACLS files /e /p {USERNAME}:{PERMISSION}
+
+    Where,
+
+    /p : Set new permission
+
+    /e : Edit permission and kept old permission as it is i.e. edit ACL instead of replacing it.
+
+    {USERNAME} : Name of user
+
+    {PERMISSION} : Permission can be:
+
+    R - Read
+
+    W - Write
+
+    C - Change (write)
+
+    F - Full control
+
+    For example grant Rocky Full (F) control with following command (type at Windows command prompt):
+
+    C:> CACLS files /e /p rocky:f
+
+    Read complete help by typing following command:
+
+    C:> cacls /?
+
+
+
+
+
+
+Open a Command Prompt, then execute this command:
+
+    icacls "c:\somelocation\of\path" /q /c /t /grant Users:F
+
+F gives Full Access.
+
+/q /c /t applies the permissions to subfolders.
+
+Note: Sometimes "Run as Administrator" will help.
+
+
+
+
+
+
+
+You can also use ICACLS.
+
+To grant the Users group Full Control to a folder:
+
+>icacls "C:\MyFolder" /grant Users:F
+
+To grant Modify permission to IIS users for C:\MyFolder (if you need your IIS has ability to R/W files into specific folder):
+
+>icacls "C:\MyFolder" /grant IIS_IUSRS:M
+
+If you do ICACLS /? you will be able to see all available options.
+
+
