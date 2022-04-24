@@ -1,0 +1,673 @@
+Nmap scan report for 10.10.210.130
+Host is up (0.53s latency).
+Not shown: 979 filtered tcp ports (no-response)
+PORT     STATE SERVICE             VERSION
+53/tcp   open  domain              Simple DNS Plus
+80/tcp   open  http                Microsoft IIS httpd 10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Windcorp.
+88/tcp   open  kerberos-sec        Microsoft Windows Kerberos (server time: 2022-02-28 07:40:52Z)
+135/tcp  open  msrpc               Microsoft Windows RPC
+139/tcp  open  netbios-ssn         Microsoft Windows netbios-ssn
+389/tcp  open  ldap                Microsoft Windows Active Directory LDAP (Domain: windcorp.thm0., Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http          Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ldapssl?
+2179/tcp open  vmrdp?
+3268/tcp open  ldap                Microsoft Windows Active Directory LDAP (Domain: windcorp.thm0., Site: Default-First-Site-Name)
+3269/tcp open  globalcatLDAPssl?
+3389/tcp open  ms-wbt-server       Microsoft Terminal Services
+|_ssl-date: 2022-02-28T07:43:39+00:00; -24s from scanner time.
+| rdp-ntlm-info: 
+|   Target_Name: WINDCORP
+|   NetBIOS_Domain_Name: WINDCORP
+|   NetBIOS_Computer_Name: FIRE
+|   DNS_Domain_Name: windcorp.thm
+|   DNS_Computer_Name: Fire.windcorp.thm
+|   DNS_Tree_Name: windcorp.thm
+|   Product_Version: 10.0.17763
+|_  System_Time: 2022-02-28T07:43:06+00:00
+| ssl-cert: Subject: commonName=Fire.windcorp.thm
+| Not valid before: 2022-02-27T07:39:55
+|_Not valid after:  2022-08-29T07:39:55
+5222/tcp open  jabber              Ignite Realtime Openfire Jabber server 3.10.0 or later
+| ssl-cert: Subject: commonName=fire.windcorp.thm
+| Subject Alternative Name: DNS:fire.windcorp.thm, DNS:*.fire.windcorp.thm
+| Not valid before: 2020-05-01T08:39:00
+|_Not valid after:  2025-04-30T08:39:00
+|_ssl-date: 2022-02-28T07:43:45+00:00; -24s from scanner time.
+| xmpp-info: 
+|   STARTTLS Failed
+|   info: 
+|     stream_id: 534z7o1u20
+|     unknown: 
+|     features: 
+|     errors: 
+|       invalid-namespace
+|       (timeout)
+|     xmpp: 
+|       version: 1.0
+|     compression_methods: 
+|     auth_mechanisms: 
+|_    capabilities: 
+5269/tcp open  xmpp                Wildfire XMPP Client
+| xmpp-info: 
+|   STARTTLS Failed
+|   info: 
+|     unknown: 
+|     features: 
+|     errors: 
+|       (timeout)
+|     xmpp: 
+|     compression_methods: 
+|     auth_mechanisms: 
+|_    capabilities: 
+7070/tcp open  http                Jetty 9.4.18.v20190429
+|_http-server-header: Jetty(9.4.18.v20190429)
+|_http-title: Openfire HTTP Binding Service
+7443/tcp open  ssl/http            Jetty 9.4.18.v20190429
+|_http-server-header: Jetty(9.4.18.v20190429)
+| ssl-cert: Subject: commonName=fire.windcorp.thm
+| Subject Alternative Name: DNS:fire.windcorp.thm, DNS:*.fire.windcorp.thm
+| Not valid before: 2020-05-01T08:39:00
+|_Not valid after:  2025-04-30T08:39:00
+|_http-title: Openfire HTTP Binding Service
+7777/tcp open  socks5              (No authentication; connection not allowed by ruleset)
+| socks-auth-info: 
+|_  No authentication
+9090/tcp open  zeus-admin?
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.1 200 OK
+|     Date: Mon, 28 Feb 2022 07:40:50 GMT
+|     Last-Modified: Fri, 31 Jan 2020 17:54:10 GMT
+|     Content-Type: text/html
+|     Accept-Ranges: bytes
+|     Content-Length: 115
+|     <html>
+|     <head><title></title>
+|     <meta http-equiv="refresh" content="0;URL=index.jsp">
+|     </head>
+|     <body>
+|     </body>
+|     </html>
+|   HTTPOptions: 
+|     HTTP/1.1 200 OK
+|     Date: Mon, 28 Feb 2022 07:41:05 GMT
+|     Allow: GET,HEAD,POST,OPTIONS
+|   JavaRMI, drda, ibm-db2-das, informix: 
+|     HTTP/1.1 400 Illegal character CNTL=0x0
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 69
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: Illegal character CNTL=0x0</pre>
+|   SqueezeCenter_CLI: 
+|     HTTP/1.1 400 No URI
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 49
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: No URI</pre>
+|   WMSRequest: 
+|     HTTP/1.1 400 Illegal character CNTL=0x1
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 69
+|     Connection: close
+|_    <h1>Bad Message 400</h1><pre>reason: Illegal character CNTL=0x1</pre>
+9091/tcp open  ssl/xmltec-xmlmail?
+| ssl-cert: Subject: commonName=fire.windcorp.thm
+| Subject Alternative Name: DNS:fire.windcorp.thm, DNS:*.fire.windcorp.thm
+| Not valid before: 2020-05-01T08:39:00
+|_Not valid after:  2025-04-30T08:39:00
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, DNSVersionBindReqTCP: 
+|     HTTP/1.1 400 Illegal character CNTL=0x0
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 69
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: Illegal character CNTL=0x0</pre>
+|   GetRequest: 
+|     HTTP/1.1 200 OK
+|     Date: Mon, 28 Feb 2022 07:41:26 GMT
+|     Last-Modified: Fri, 31 Jan 2020 17:54:10 GMT
+|     Content-Type: text/html
+|     Accept-Ranges: bytes
+|     Content-Length: 115
+|     <html>
+|     <head><title></title>
+|     <meta http-equiv="refresh" content="0;URL=index.jsp">
+|     </head>
+|     <body>
+|     </body>
+|     </html>
+|   HTTPOptions: 
+|     HTTP/1.1 200 OK
+|     Date: Mon, 28 Feb 2022 07:41:29 GMT
+|     Allow: GET,HEAD,POST,OPTIONS
+|   Help: 
+|     HTTP/1.1 400 No URI
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 49
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: No URI</pre>
+|   RPCCheck: 
+|     HTTP/1.1 400 Illegal character OTEXT=0x80
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 71
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: Illegal character OTEXT=0x80</pre>
+|   RTSPRequest: 
+|     HTTP/1.1 400 Unknown Version
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 58
+|     Connection: close
+|     <h1>Bad Message 400</h1><pre>reason: Unknown Version</pre>
+|   SSLSessionReq: 
+|     HTTP/1.1 400 Illegal character CNTL=0x16
+|     Content-Type: text/html;charset=iso-8859-1
+|     Content-Length: 70
+|     Connection: close
+|_    <h1>Bad Message 400</h1><pre>reason: Illegal character CNTL=0x16</pre>
+2 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port9090-TCP:V=7.92%I=7%D=2/28%Time=621C7C9B%P=x86_64-pc-linux-gnu%r(Ge
+SF:tRequest,11D,"HTTP/1\.1\x20200\x20OK\r\nDate:\x20Mon,\x2028\x20Feb\x202
+SF:022\x2007:40:50\x20GMT\r\nLast-Modified:\x20Fri,\x2031\x20Jan\x202020\x
+SF:2017:54:10\x20GMT\r\nContent-Type:\x20text/html\r\nAccept-Ranges:\x20by
+SF:tes\r\nContent-Length:\x20115\r\n\r\n<html>\n<head><title></title>\n<me
+SF:ta\x20http-equiv=\"refresh\"\x20content=\"0;URL=index\.jsp\">\n</head>\
+SF:n<body>\n</body>\n</html>\n\n")%r(JavaRMI,C3,"HTTP/1\.1\x20400\x20Illeg
+SF:al\x20character\x20CNTL=0x0\r\nContent-Type:\x20text/html;charset=iso-8
+SF:859-1\r\nContent-Length:\x2069\r\nConnection:\x20close\r\n\r\n<h1>Bad\x
+SF:20Message\x20400</h1><pre>reason:\x20Illegal\x20character\x20CNTL=0x0</
+SF:pre>")%r(WMSRequest,C3,"HTTP/1\.1\x20400\x20Illegal\x20character\x20CNT
+SF:L=0x1\r\nContent-Type:\x20text/html;charset=iso-8859-1\r\nContent-Lengt
+SF:h:\x2069\r\nConnection:\x20close\r\n\r\n<h1>Bad\x20Message\x20400</h1><
+SF:pre>reason:\x20Illegal\x20character\x20CNTL=0x1</pre>")%r(ibm-db2-das,C
+SF:3,"HTTP/1\.1\x20400\x20Illegal\x20character\x20CNTL=0x0\r\nContent-Type
+SF::\x20text/html;charset=iso-8859-1\r\nContent-Length:\x2069\r\nConnectio
+SF:n:\x20close\r\n\r\n<h1>Bad\x20Message\x20400</h1><pre>reason:\x20Illega
+SF:l\x20character\x20CNTL=0x0</pre>")%r(SqueezeCenter_CLI,9B,"HTTP/1\.1\x2
+SF:0400\x20No\x20URI\r\nContent-Type:\x20text/html;charset=iso-8859-1\r\nC
+SF:ontent-Length:\x2049\r\nConnection:\x20close\r\n\r\n<h1>Bad\x20Message\
+SF:x20400</h1><pre>reason:\x20No\x20URI</pre>")%r(informix,C3,"HTTP/1\.1\x
+SF:20400\x20Illegal\x20character\x20CNTL=0x0\r\nContent-Type:\x20text/html
+SF:;charset=iso-8859-1\r\nContent-Length:\x2069\r\nConnection:\x20close\r\
+SF:n\r\n<h1>Bad\x20Message\x20400</h1><pre>reason:\x20Illegal\x20character
+SF:\x20CNTL=0x0</pre>")%r(drda,C3,"HTTP/1\.1\x20400\x20Illegal\x20characte
+SF:r\x20CNTL=0x0\r\nContent-Type:\x20text/html;charset=iso-8859-1\r\nConte
+SF:nt-Length:\x2069\r\nConnection:\x20close\r\n\r\n<h1>Bad\x20Message\x204
+SF:00</h1><pre>reason:\x20Illegal\x20character\x20CNTL=0x0</pre>")%r(HTTPO
+SF:ptions,56,"HTTP/1\.1\x20200\x20OK\r\nDate:\x20Mon,\x2028\x20Feb\x202022
+SF:\x2007:41:05\x20GMT\r\nAllow:\x20GET,HEAD,POST,OPTIONS\r\n\r\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port9091-TCP:V=7.92%T=SSL%I=7%D=2/28%Time=621C7CBE%P=x86_64-pc-linux-gn
+SF:u%r(GetRequest,11D,"HTTP/1\.1\x20200\x20OK\r\nDate:\x20Mon,\x2028\x20Fe
+SF:b\x202022\x2007:41:26\x20GMT\r\nLast-Modified:\x20Fri,\x2031\x20Jan\x20
+SF:2020\x2017:54:10\x20GMT\r\nContent-Type:\x20text/html\r\nAccept-Ranges:
+SF:\x20bytes\r\nContent-Length:\x20115\r\n\r\n<html>\n<head><title></title
+SF:>\n<meta\x20http-equiv=\"refresh\"\x20content=\"0;URL=index\.jsp\">\n</
+SF:head>\n<body>\n</body>\n</html>\n\n")%r(HTTPOptions,56,"HTTP/1\.1\x2020
+SF:0\x20OK\r\nDate:\x20Mon,\x2028\x20Feb\x202022\x2007:41:29\x20GMT\r\nAll
+SF:ow:\x20GET,HEAD,POST,OPTIONS\r\n\r\n")%r(RTSPRequest,AD,"HTTP/1\.1\x204
+SF:00\x20Unknown\x20Version\r\nContent-Type:\x20text/html;charset=iso-8859
+SF:-1\r\nContent-Length:\x2058\r\nConnection:\x20close\r\n\r\n<h1>Bad\x20M
+SF:essage\x20400</h1><pre>reason:\x20Unknown\x20Version</pre>")%r(RPCCheck
+SF:,C7,"HTTP/1\.1\x20400\x20Illegal\x20character\x20OTEXT=0x80\r\nContent-
+SF:Type:\x20text/html;charset=iso-8859-1\r\nContent-Length:\x2071\r\nConne
+SF:ction:\x20close\r\n\r\n<h1>Bad\x20Message\x20400</h1><pre>reason:\x20Il
+SF:legal\x20character\x20OTEXT=0x80</pre>")%r(DNSVersionBindReqTCP,C3,"HTT
+SF:P/1\.1\x20400\x20Illegal\x20character\x20CNTL=0x0\r\nContent-Type:\x20t
+SF:ext/html;charset=iso-8859-1\r\nContent-Length:\x2069\r\nConnection:\x20
+SF:close\r\n\r\n<h1>Bad\x20Message\x20400</h1><pre>reason:\x20Illegal\x20c
+SF:haracter\x20CNTL=0x0</pre>")%r(DNSStatusRequestTCP,C3,"HTTP/1\.1\x20400
+SF:\x20Illegal\x20character\x20CNTL=0x0\r\nContent-Type:\x20text/html;char
+SF:set=iso-8859-1\r\nContent-Length:\x2069\r\nConnection:\x20close\r\n\r\n
+SF:<h1>Bad\x20Message\x20400</h1><pre>reason:\x20Illegal\x20character\x20C
+SF:NTL=0x0</pre>")%r(Help,9B,"HTTP/1\.1\x20400\x20No\x20URI\r\nContent-Typ
+SF:e:\x20text/html;charset=iso-8859-1\r\nContent-Length:\x2049\r\nConnecti
+SF:on:\x20close\r\n\r\n<h1>Bad\x20Message\x20400</h1><pre>reason:\x20No\x2
+SF:0URI</pre>")%r(SSLSessionReq,C5,"HTTP/1\.1\x20400\x20Illegal\x20charact
+SF:er\x20CNTL=0x16\r\nContent-Type:\x20text/html;charset=iso-8859-1\r\nCon
+SF:tent-Length:\x2070\r\nConnection:\x20close\r\n\r\n<h1>Bad\x20Message\x2
+SF:0400</h1><pre>reason:\x20Illegal\x20character\x20CNTL=0x16</pre>");
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+OS fingerprint not ideal because: Missing a closed TCP port so results incomplete
+No OS matches for host
+Network Distance: 4 hops
+Service Info: Host: FIRE; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled and required
+|_clock-skew: mean: -24s, deviation: 0s, median: -24s
+| smb2-time: 
+|   date: 2022-02-28T07:43:07
+|_  start_date: N/A
+
+TRACEROUTE (using port 139/tcp)
+HOP RTT       ADDRESS
+1   301.09 ms 10.4.0.1
+2   ... 3
+4   608.66 ms 10.10.210.130
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 235.28 seconds
+
+
+Antonietta Vidal
+Britney Palmer
+Brittany Cruz
+Carla Meyer
+Buse Candan
+Edeltraut Daub
+Edward Lewis
+Emile Lavoie
+Emile Henry
+Emily Anderson
+Emily jensen
+Hemmo Boschma
+Isabella Hughes
+Isra Saur
+Jackson Vasquez
+Jaqueline Dittmer
+lily levesque
+kirk Uglas
+users
+
+
+xmpp:organicfish718@fire.windcorp.thm">Antonietta Vidal
+xmpp:organicwolf509@fire.windcorp.thm">Britney Palmer
+xmpp:tinywolf424@fire.windcorp.thm">Brittany Cruz
+xmpp:angrybird253@fire.windcorp.thm">Carla Meyer
+buse@fire.windcorp.thm">Buse Candan
+xmpp:Edeltraut@fire.windcorp.thm"> Edeltraut Daub
+xmpp:Edward@fire.windcorp.thm"> Edward Lewis
+xmpp:Emile@fire.windcorp.thm"> Emile Lavoie
+xmpp:tinygoose102@fire.windcorp.thm"> Emile Henry
+xmpp:brownostrich284@fire.windcorp.thm"> Emily Anderson
+xmpp:sadswan869@fire.windcorp.thm"> Hemmo Boschma
+xmpp:sadswan869@fire.windcorp.thm"> Isabella Hughes
+xmpp:whiteleopard529@fire.windcorp.thm"> Isra Saur
+xmpp:happymeercat399@fire.windcorp.thm"> Jackson Vasquez
+xmpp:orangegorilla428@fire.windcorp.thm"> Jaqueline Dittmer
+<a href="https://www.igniterealtime.org/projects/spark/">
+
+
+
+
+nmap --script "safe or smb-enum-*" -p 445 10.10.37.135        
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-01-04 17:53 IST
+Pre-scan script results:
+| broadcast-listener: 
+|   ether
+|       ARP Request
+|         sender ip     sender mac         target ip
+|         192.168.1.1   b4:f9:49:48:0e:f0  192.168.1.35
+|         192.168.1.46  40:2f:86:b7:50:b8  192.168.1.11
+|   udp
+|       DHCP
+|         srv ip       cli ip        mask           gw           dns                            vendor
+|         192.168.1.1  192.168.1.35  255.255.255.0  192.168.1.1  205.254.185.7, 103.56.229.140  -
+|       MDNS
+|         Generic
+|           ip            ipv6                       name
+|_          192.168.1.46  fe80::422f:86ff:feb7:50b8  _hap._tcp.local
+| broadcast-dhcp-discover: 
+|   Response 1 of 1: 
+|     Interface: wlan0
+|     IP Offered: 192.168.1.35
+|     Server Identifier: 192.168.1.1
+|     Subnet Mask: 255.255.255.0
+|     Router: 192.168.1.1
+|     Domain Name Server: 205.254.185.7, 103.56.229.140
+|_    Domain Name: hgu_lan
+| broadcast-igmp-discovery: 
+|   192.168.1.1
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.0.2
+|     Description: All Routers on this Subnet
+|   192.168.1.1
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.0.22
+|     Description: IGMP
+|   192.168.1.33
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.0.251
+|     Description: mDNS (rfc6762)
+|   192.168.1.34
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.0.251
+|     Description: mDNS (rfc6762)
+|   192.168.1.46
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.0.251
+|     Description: mDNS (rfc6762)
+|   192.168.1.46
+|     Interface: wlan0
+|     Version: 2
+|     Group: 224.0.1.187
+|     Description: All CoAP Nodes (rfc7252)
+|   192.168.1.1
+|     Interface: wlan0
+|     Version: 2
+|     Group: 239.255.255.250
+|     Description: Organization-Local Scope (rfc2365)
+|   192.168.1.46
+|     Interface: wlan0
+|     Version: 2
+|     Group: 239.255.255.250
+|     Description: Organization-Local Scope (rfc2365)
+|_  Use the newtargets script-arg to add the results as targets
+|_eap-info: please specify an interface with -e
+| broadcast-upnp-info: 
+|   239.255.255.250
+|       Server: Linux/i686 UPnP/1,0 DLNADOC/1.50 LGE WebOS TV/Version 0.9
+|_      Location: http://192.168.1.46:1247/
+| broadcast-dns-service-discovery: 
+|   224.0.0.251
+|     7000/tcp airplay
+|       acl=0
+|       deviceid=B8:7C:4B:54:96:4E
+|       features=0x7F8AD0,0x38BCB46
+|       rsf=0x3
+|       fv=p20.04.30.50
+|       flags=0x244
+|       model=55UN7190PTA
+|       manufacturer=LG Electronics
+|       serialNumber=010PLRS261718_58:fd:b1:c1:57:13
+|       protovers=1.1
+|       srcvers=377.25.06
+|       pi=B8:7C:4B:54:96:4E
+|       psi=00000000-0000-0000-0000-B87C4B54964E
+|       gid=00000000-0000-0000-0000-B87C4B54964E
+|       Address=192.168.1.46 fe80::422f:86ff:feb7:50b8
+|     25454/udp gasetup
+|       3i=d80cef8ad1627a62df1033982bc58bc9311e51810ba4f352cf33d332a7c07080a1ab47a365b42ca5ffb5efa1cbf4cc369d19f31f7c646f87ed192c747a789099
+|       3m=lge-assistant-webas-2020-kic-an2-int
+|       3n=KRISHNA CHATURVEDI
+|       cf=D1WptwA-Cvl3EB_w_YxJzkKO8CF2h6O2BR8EeVX_38E
+|       ci=83514302522-okdlmfki8ffsdmr54l1vucsabhcivbr9.apps.googleusercontent.com
+|       Address=192.168.1.46
+|     39390/tcp hap
+|       Address=192.168.1.46 fe80::422f:86ff:feb7:50b8
+|     56666/udp mi-connect
+|_      Address=192.168.1.34 fe80::70be:7481:c892:9478
+|_http-robtex-shared-ns: *TEMPORARILY DISABLED* due to changes in Robtex's API. See https://www.robtex.com/api/
+| targets-asn: 
+|_  targets-asn.asn is a mandatory parameter
+|_hostmap-robtex: *TEMPORARILY DISABLED* due to changes in Robtex's API. See https://www.robtex.com/api/
+Nmap scan report for Windcorp (10.10.37.135)
+Host is up (0.68s latency).
+
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+|_smb-enum-services: ERROR: Script execution failed (use -d to debug)
+
+Host script results:
+| smb2-security-mode: 
+|   3.1.1: 
+|_    Message signing enabled and required
+| dns-blacklist: 
+|   SPAM
+|_    l2.apews.org - FAIL
+|_fcrdns: FAIL (No PTR record)
+|_ipidseq: ERROR: Script execution failed (use -d to debug)
+| smb-protocols: 
+|   dialects: 
+|     2.0.2
+|     2.1
+|     3.0
+|     3.0.2
+|_    3.1.1
+|_clock-skew: 3m06s
+| unusual-port: 
+|_  WARNING: this script depends on Nmap's service/version detection (-sV)
+| smb2-time: 
+|   date: 2022-01-04T12:27:14
+|_  start_date: N/A
+| smb2-capabilities: 
+|   2.0.2: 
+|     Distributed File System
+|   2.1: 
+|     Distributed File System
+|     Leasing
+|     Multi-credit operations
+|   3.0: 
+|     Distributed File System
+|     Leasing
+|     Multi-credit operations
+|   3.0.2: 
+|     Distributed File System
+|     Leasing
+|     Multi-credit operations
+|   3.1.1: 
+|     Distributed File System
+|     Leasing
+|_    Multi-credit operations
+|_msrpc-enum: Could not negotiate a connection:SMB: Failed to receive bytes: ERROR
+| port-states: 
+|   tcp: 
+|_    open: 445
+|_path-mtu: 1006 <= PMTU < 1492
+| smb-mbenum: 
+|_  ERROR: Failed to connect to browser service: Could not negotiate a connection:SMB: Failed to receive bytes: ERROR
+
+Post-scan script results:
+| reverse-index: 
+|_  445/tcp: 10.10.37.135
+Nmap done: 1 IP address (1 host up) scanned in 101.19 seconds
+
+
+
+
+nmap -sU 10.10.37.135 -top-ports 20
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-01-04 16:40 IST
+Nmap scan report for 10.10.37.135
+Host is up (0.57s latency).
+
+PORT      STATE         SERVICE
+53/udp    open          domain
+67/udp    open|filtered dhcps
+68/udp    open|filtered dhcpc
+69/udp    open|filtered tftp
+123/udp   open          ntp
+135/udp   open|filtered msrpc
+137/udp   open|filtered netbios-ns
+138/udp   open|filtered netbios-dgm
+139/udp   open|filtered netbios-ssn
+161/udp   open|filtered snmp
+162/udp   open|filtered snmptrap
+445/udp   open|filtered microsoft-ds
+500/udp   open|filtered isakmp
+514/udp   open|filtered syslog
+520/udp   open|filtered route
+631/udp   open|filtered ipp
+1434/udp  open|filtered ms-sql-m
+1900/udp  open|filtered upnp
+4500/udp  open|filtered nat-t-ike
+49152/udp open|filtered unknown
+
+
+
+nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 3389 -T4 10.10.37.135
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-01-04 18:35 IST
+Nmap scan report for Windcorp (10.10.37.135)
+Host is up (0.71s latency).
+
+PORT     STATE SERVICE
+3389/tcp open  ms-wbt-server
+| rdp-ntlm-info: 
+|   Target_Name: WINDCORP
+|   NetBIOS_Domain_Name: WINDCORP
+|   NetBIOS_Computer_Name: FIRE
+|   DNS_Domain_Name: windcorp.thm
+|   DNS_Computer_Name: Fire.windcorp.thm
+|   DNS_Tree_Name: windcorp.thm
+|   Product_Version: 10.0.17763
+|_  System_Time: 2022-01-04T13:08:44+00:00
+| rdp-enum-encryption: 
+|   Security layer
+|     CredSSP (NLA): SUCCESS
+|     CredSSP with Early User Auth: SUCCESS
+|_    RDSTLS: SUCCESS
+
+
+
+
+
+enum4linux -a 10.10.37.135 
+Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue Jan  4 18:19:23 2022
+
+ ========================== 
+|    Target Information    |
+ ========================== 
+Target ........... 10.10.37.135
+RID Range ........ 500-550,1000-1050
+Username ......... ''
+Password ......... ''
+Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+
+
+ ==================================================== 
+|    Enumerating Workgroup/Domain on 10.10.37.135    |
+ ==================================================== 
+[E] Can't find workgroup/domain
+
+
+ ============================================ 
+|    Nbtstat Information for 10.10.37.135    |
+ ============================================ 
+Looking up status of 10.10.37.135
+No reply from 10.10.37.135
+
+ ===================================== 
+|    Session Check on 10.10.37.135    |
+ ===================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 437.
+[+] Server 10.10.37.135 allows sessions using username '', password ''
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 451.
+[+] Got domain/workgroup name: 
+
+ =========================================== 
+|    Getting domain SID for 10.10.37.135    |
+ =========================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 359.
+Domain Name: WINDCORP
+Domain Sid: S-1-5-21-555431066-3599073733-176599750
+[+] Host is part of a domain (not a workgroup)
+
+ ====================================== 
+|    OS information on 10.10.37.135    |
+ ====================================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 458.
+Use of uninitialized value $os_info in concatenation (.) or string at ./enum4linux.pl line 464.
+[+] Got OS info for 10.10.37.135 from smbclient: 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 467.
+[+] Got OS info for 10.10.37.135 from srvinfo:
+Could not initialise srvsvc. Error was NT_STATUS_ACCESS_DENIED
+
+ ============================= 
+|    Users on 10.10.37.135    |
+ ============================= 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 866.
+[E] Couldn't find users using querydispinfo: NT_STATUS_ACCESS_DENIED
+
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 881.
+[E] Couldn't find users using enumdomusers: NT_STATUS_ACCESS_DENIED
+
+ ========================================= 
+|    Share Enumeration on 10.10.37.135    |
+ ========================================= 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 640.
+do_connect: Connection to 10.10.37.135 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+Reconnecting with SMB1 for workgroup listing.
+Unable to connect with SMB1 -- no workgroup available
+
+[+] Attempting to map shares on 10.10.37.135
+
+ ==================================================== 
+|    Password Policy Information for 10.10.37.135    |
+ ==================================================== 
+[E] Unexpected error from polenum:
+
+
+[+] Attaching to 10.10.37.135 using a NULL share
+
+[+] Trying protocol 139/SMB...
+
+        [!] Protocol failed: Cannot request session (Called Name:10.10.37.135)
+
+[+] Trying protocol 445/SMB...
+
+        [!] Protocol failed: SAMR SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
+
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 501.
+
+[E] Failed to get password policy with rpcclient
+
+
+ ============================== 
+|    Groups on 10.10.37.135    |
+ ============================== 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 542.
+
+[+] Getting builtin groups:
+
+[+] Getting builtin group memberships:
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 542.
+
+[+] Getting local groups:
+
+[+] Getting local group memberships:
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 593.
+
+[+] Getting domain groups:
+
+[+] Getting domain group memberships:
+
+ ======================================================================= 
+|    Users on 10.10.37.135 via RID cycling (RIDS: 500-550,1000-1050)    |
+ ======================================================================= 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 710.
+[E] Couldn't get SID: NT_STATUS_ACCESS_DENIED.  RID cycling not possible.
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 742.
+
+ ============================================= 
+|    Getting printer info for 10.10.37.135    |
+ ============================================= 
+Use of uninitialized value $global_workgroup in concatenation (.) or string at ./enum4linux.pl line 991.
+Could not initialise spoolss. Error was NT_STATUS_ACCESS_DENIED
+
+
+enum4linux complete on Tue Jan  4 18:21:51 2022
+
+
+
+
+python3 ldapdomaindump.py -u 'WINDCORP.THM\lilyle' -p ChangeMe#1234 windcorp.thm
+
+python3 windapsearch.py -d windcorp.thm --dc-ip 10.10.116.174 -U -o . -u WINDCORP.THM\\lilyle -p ChangeMe#1234
+
+
+
+
+
+fire.windcorp.thm/reset.asp 
+
+http://10.10.210.130/img/lilyleAndSparky.jpg
+
+Your password has been reset to: ChangeMe#1234
+Remember to change it after logging in! 
+

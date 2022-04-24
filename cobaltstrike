@@ -1,0 +1,8 @@
+Running cobalt strike se
+
+service postgresql start                stop at end 
+msfdb init                              stop at end
+
+./cobaltstrike
+
+
