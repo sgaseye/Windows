@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-us">
+<head>
+
+<meta charset="utf-8">
+<!-- 
+	Website by LIMESODA Interactive Marketing GmbH | www.limesoda.com
+
+	This website is powered by TYPO3 - inspiring people to share!
+	TYPO3 is a free open source Content Management Framework initially created by Kasper Skaarhoj and licensed under GNU/GPL.
+	TYPO3 is copyright 1998-2022 of Kasper Skaarhoj. Extensions are copyright of their respective owners.
+	Information and contribution at https://typo3.org/
+-->
+
+
+<link rel="shortcut icon" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/favicon.ico" type="image/vnd.microsoft.icon">
+<title>Windows Privilege Escalation – An Approach For Penetration Testers</title>
+<meta name="generator" content="TYPO3 CMS" />
+<meta name="description" content="A pentesting expert reveals the necessary knowledge about Windows components and appropriate security mechanisms to perform attacks on the rights extension.
+Since the early stages of operating systems, users and privileges were separated. Implemented security mechanisms prevent unauthorized access and usage of data and functions. These security mechanisms have been circumvented a number of times, which lead to steady improvements of these. Nevertheless, attackers find new vulnerabilities and security holes." />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index,follow" />
+<meta property="og:title" content="Windows Privilege Escalation – An Approach For Penetration Testers" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sec-consult.com/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/" />
+<meta property="og:image" content="https://sec-consult.com/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_28f93e25f8.png" />
+<meta property="og:image:width" content="887" />
+<meta property="og:image:height" content="378" />
+<meta property="og:description" content="A pentesting expert reveals the necessary knowledge about Windows components and appropriate security mechanisms to perform attacks on the rights extension.
+Since the early stages of operating systems, users and privileges were separated. Implemented security mechanisms prevent unauthorized access and usage of data and functions. These security mechanisms have been circumvented a number of times, which lead to steady improvements of these. Nevertheless, attackers find new vulnerabilities and security holes." />
+<meta property="og:site_name" content="SEC Consult" />
+<meta name="twitter:card" content="summary" />
+<meta name="google" content="notranslate" />
+<meta name="apple-mobile-web-app-capable" content="no" />
+
+
+<link rel="stylesheet" type="text/css" href="/typo3temp/assets/compressed/merged-39691b3d69e82f7c35933dd852c0b683-b3a542b0d2788effb186280b9941c11c.css?1648472420" media="all">
+
+
+<script src="/typo3conf/ext/sec_consult_base/Resources/Public/JavaScript/manifest.js?1648472342" defer="defer"></script>
+<script src="/typo3conf/ext/sec_consult_base/Resources/Public/JavaScript/vendor.js?1648472342" defer="defer"></script>
+<script src="/typo3temp/assets/compressed/merged-7c5787eb7029b1fb6e953298f5d7dcf1-37699a270bce1232f39b4d8d11793a1a.js?1648472422"></script>
+<script src="/typo3conf/ext/sec_consult_base/Resources/Public/JavaScript/main.js?1648472342" defer="defer"></script>
+
+
+<script id="ls-cookie-consent" type="application/json">{"groups":{"group-2":{"cookie-1":{"gtm-trigger":"typo3-google-analytics","header":["<!-- Google Tag Manager -->\r\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\r\nnew Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\r\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\r\n'https:\/\/www.googletagmanager.com\/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\r\n})(window,document,'script','dataLayer','GTM-5NKBBM4');<\/script>\r\n<!-- End Google Tag Manager -->"]}}},"options":{"forceConsent":false,"hideOptions":false,"noTracking":false}}</script>
+
+    
+        
+    
+        
+    
+        
+    
+
+<link rel="apple-touch-icon" sizes="180x180" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/favicon-16x16.png">
+<link rel="manifest" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/site.webmanifest">
+<link rel="mask-icon" href="/typo3conf/ext/sec_consult_base/Resources/Public/Icons/Favicons/safari-pinned-tab.svg" color="#ea8923">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+<link rel="preload" as="font" href="/typo3conf/ext/sec_consult_base/Resources/Public/Fonts/Icons/icons.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/typo3conf/ext/sec_consult_base/Resources/Public/Fonts/Roboto/roboto-v20-latin-500.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/typo3conf/ext/sec_consult_base/Resources/Public/Fonts/Roboto/roboto-v20-latin-700.woff2" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" as="font" href="/typo3conf/ext/sec_consult_base/Resources/Public/Fonts/Roboto/roboto-v20-latin-regular.woff2" type="font/woff2" crossorigin="anonymous">
+
+<link rel="canonical" href="https://sec-consult.com/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/"/>
+
+<link rel="alternate" hreflang="en-us" href="https://sec-consult.com/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/"/>
+<link rel="alternate" hreflang="de-AT" href="https://sec-consult.com/de/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/"/>
+<link rel="alternate" hreflang="x-default" href="https://sec-consult.com/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/"/>
+</head>
+<body id="p31" class="page-31 pagelevel-2 language-en backendlayout-default layout-0" itemscope itemtype="https://schema.org/WebPage">
+
+
+
+
+<div class="wrapper"><header class="header"><div class="header-container"><nav class="navbar"><div class="navbar-left"><a class="navbar__home-link" title="Home" href="/"><svg xmlns="http://www.w3.org/2000/svg" class="navbar-logo" viewBox="0 0 306.85 89.36" width="230" height="67"><path fill="#fff" d="M306.85 61.56a5.18 5.18 0 01-5.17 5.19H5.17A5.17 5.17 0 010 61.56V5.19A5.17 5.17 0 015.17 0h296.51a5.18 5.18 0 015.17 5.19z"/><path fill="#333c42" d="M305.33 61.57a4 4 0 01-3.66 3.67H5.14a3.89 3.89 0 01-3.62-3.67V5.2a3.91 3.91 0 013.64-3.68h296.51a4 4 0 013.66 3.67z"/><path fill="#fff" d="M64.85 57c0 2.89-1.06 4-3.94 4H9.42c-2.89 0-3.94-1.06-3.94-4V9.49c0-2.89 1-3.94 3.94-3.94h51.49c2.88 0 3.94 1 3.94 3.94z"/><path fill="#6f8591" d="M35.44 6.23l8.51 17.24 19.03 2.77-13.77 13.42 3.25 18.95-17.02-8.95-17.02 8.95 3.25-18.95L7.9 26.24l19.03-2.77 8.51-17.24z"/><path fill="#a2bfce" d="M35.44 6.23l8.51 17.24-3.65 10.19 22.68-7.42-13.77 13.42-7.27 4.49 10.52 14.46-17.02-8.95-5.7-6.69-11.32 15.64 3.25-18.95 5.36-7.21L7.9 26.24l18.42-2.68 9.13 3.61-.01-20.94z"/><circle fill="#fff" cx="35.41" cy="34.7" r="16.02"/><path fill="#333c42" d="M50.34 34.7a14.93 14.93 0 11-14.93-14.93A14.94 14.94 0 0150.34 34.7z"/><path fill="#fff" d="M47.79 34.7a12.38 12.38 0 11-12.38-12.38A12.38 12.38 0 0147.79 34.7z"/><path fill="#f7941d" d="M46.7 34.7a11.29 11.29 0 11-11.29-11.29A11.3 11.3 0 0146.7 34.7z"/><path fill="#fff" d="M78 42.18a15.09 15.09 0 007 1.88c2.91 0 4.45-1.3 4.45-3.27s-1.33-3-4.7-4.22C80.07 34.78 77 32 77 27.6c0-5.16 4-9.06 10.6-9.06a15.43 15.43 0 017.15 1.52l-1.42 5.48a12.2 12.2 0 00-5.81-1.44c-2.75 0-4.08 1.39-4.08 2.92 0 1.93 1.54 2.78 5.2 4.26 4.94 2 7.23 4.75 7.23 9 0 5.06-3.58 9.37-11.26 9.37a17.21 17.21 0 01-7.94-1.88zm38.84-5.74h-10.3v7.18h11.51v5.6h-17.83V19h17.24v5.6h-10.92v6.28h10.3zm26.05 11.97a17.21 17.21 0 01-7.14 1.31c-9.68 0-14.67-6.55-14.67-15.17 0-10.32 6.81-16 15.29-16a14.92 14.92 0 016.9 1.34l-1.33 5.39a12.44 12.44 0 00-5.32-1.12c-5 0-8.89 3.27-8.89 10 0 6.06 3.32 9.87 8.93 9.87A14 14 0 00142 43zm33.11 0a17.22 17.22 0 01-7.15 1.31c-9.68 0-14.66-6.55-14.66-15.17 0-10.32 6.81-16 15.29-16a14.87 14.87 0 016.89 1.34l-1.33 5.39a12.36 12.36 0 00-5.31-1.12c-5 0-8.9 3.27-8.9 10 0 6.06 3.33 9.87 8.94 9.87a13.89 13.89 0 005.31-1zM199.28 38c0 8-5.28 11.71-10.72 11.71-5.94 0-10.51-4.22-10.51-11.31s4.32-11.66 10.88-11.66c6.19.01 10.35 4.63 10.35 11.26zm-14.71.22c0 3.77 1.45 6.6 4.15 6.6 2.5 0 4-2.65 4-6.64 0-3.23-1.16-6.55-4-6.55s-4.15 3.37-4.15 6.6zm18.61-3.94c0-2.73-.08-5-.16-7h5.48l.29 3.05h.13a7.18 7.18 0 016.27-3.55c4.16 0 7.27 3 7.27 9.47v13h-6.31V37.07c0-2.83-.92-4.76-3.2-4.76a3.5 3.5 0 00-3.24 2.56 5.14 5.14 0 00-.21 1.7v12.65h-6.32zm24.31 9.02a11.74 11.74 0 005.44 1.62c1.92 0 2.71-.68 2.71-1.8s-.63-1.7-3-2.56c-4.23-1.52-5.85-4-5.81-6.59 0-4.13 3.24-7.22 8.27-7.22a12.6 12.6 0 015.69 1.3l-1.08 4.71a9.57 9.57 0 00-4.41-1.26c-1.53 0-2.41.67-2.41 1.75s.79 1.62 3.29 2.56c3.86 1.43 5.44 3.59 5.48 6.77 0 4.13-2.95 7.14-8.77 7.14a13.58 13.58 0 01-6.56-1.57zm37.23-1.12c0 2.87.08 5.2.17 7h-5.49l-.29-3.09H259a7.17 7.17 0 01-6.36 3.59c-4.16 0-7.15-2.79-7.15-9.56V27.29h6.32v11.79c0 3.19.95 5.12 3.2 5.12a3.4 3.4 0 003.16-2.38 4 4 0 00.25-1.48V27.29h6.31zm5.07-24.81h6.32v31.85h-6.32zm18.49 3.99v5.93h4.53v5h-4.53v7.94c0 2.65.62 3.86 2.49 3.86a7.37 7.37 0 001.87-.18v5.16a12.43 12.43 0 01-4.07.58 6.49 6.49 0 01-4.78-1.88c-1.16-1.3-1.74-3.41-1.74-6.51v-9h-2.7v-5h2.7V23.2z"/><path fill="#808184" d="M171.35 84.79a4.38 4.38 0 01-3.49 1.49c-1.91 0-3.3-1-3.3-3s1.71-3 4.1-3a11 11 0 012.69.31v-1.8c0-1.59-1-2.16-2.51-2.16a5 5 0 00-3.18.91h-.41v-.81a7.27 7.27 0 013.63-.88c2.07 0 3.44.76 3.44 2.88v7.45h-.27c-.57 0-.7-.18-.7-1zm0-.94v-2.51a11.64 11.64 0 00-2.63-.31c-1.81 0-3.16.64-3.16 2.21a2.13 2.13 0 002.44 2.27 4 4 0 003.35-1.66zm4.7-6.26a7.29 7.29 0 014.49-1.74c1.43 0 2.65.59 2.65 2.72v7.61h-1v-7.49c0-1.62-.89-2-2-2a7.21 7.21 0 00-4.12 1.73v7.78h-1V76h.45c.43 0 .53.12.53 1zm20.53 7.2a4.38 4.38 0 01-3.49 1.49c-1.91 0-3.3-1-3.3-3s1.71-3 4.1-3a11 11 0 012.69.31v-1.8c0-1.59-1-2.16-2.51-2.16a5 5 0 00-3.18.91h-.41v-.81a7.27 7.27 0 013.63-.88c2.07 0 3.45.76 3.45 2.88v7.45h-.28c-.57 0-.7-.18-.7-1zm0-.94v-2.51A11.64 11.64 0 00194 81c-1.81 0-3.16.64-3.16 2.21a2.13 2.13 0 002.43 2.27 4 4 0 003.31-1.63zm2.54-7.85h1.36v-2.87h1V76h2.72v.74h-2.72v7.14c0 1.23.57 1.61 1.76 1.61h1.18v.68a9.07 9.07 0 01-1.51.12c-1.57 0-2.41-.67-2.41-2.29v-7.29h-1.36zm6.04 5.06c0-3.21 1.92-5.21 4.75-5.21s4.76 2 4.76 5.21-1.9 5.2-4.76 5.2-4.75-1.96-4.75-5.2zm8.51 0c0-2.78-1.43-4.45-3.76-4.45s-3.75 1.67-3.75 4.45 1.43 4.43 3.75 4.43 3.76-1.62 3.76-4.43zm2.24 4.24v-.81h.39a4 4 0 002.86 1c1.88 0 2.78-.78 2.78-2.19 0-1.2-.66-1.69-2.74-2s-3.2-1-3.2-2.72 1.4-2.71 3.43-2.71a5.19 5.19 0 013 .76v.81H222a3.63 3.63 0 00-2.55-.81c-1.66 0-2.52.63-2.52 1.87s.68 1.62 2.66 2c2.14.33 3.31 1 3.31 2.78s-1.15 3-3.7 3a5.19 5.19 0 01-3.29-.98zM229 81c0-3.23 2-5.19 4.84-5.19a4.79 4.79 0 013.2 1v.78h-.51a3.57 3.57 0 00-2.71-1c-2.27 0-3.82 1.63-3.82 4.41s1.43 4.43 3.82 4.43a3.72 3.72 0 002.94-1.17h.46V85a4.83 4.83 0 01-3.44 1.22c-3.03.04-4.78-1.96-4.78-5.22zm9.37.06c0-3.21 1.92-5.21 4.75-5.21s4.76 2 4.76 5.21-1.9 5.2-4.76 5.2-4.75-1.96-4.75-5.2zm8.51 0c0-2.78-1.43-4.45-3.76-4.45s-3.75 1.67-3.75 4.45 1.43 4.43 3.75 4.43 3.76-1.62 3.76-4.43zm4.04-3.54a6.59 6.59 0 014.08-1.67 2.28 2.28 0 012.43 1.69 6.45 6.45 0 014.11-1.69 2.29 2.29 0 012.53 2.51v7.82h-1v-7.57c0-1.51-.72-1.94-1.9-1.94a6.05 6.05 0 00-3.69 1.65v7.86h-1v-7.57c0-1.51-.78-1.94-1.88-1.94a5.85 5.85 0 00-3.72 1.67v7.84h-1V76h.45c.43 0 .53.12.53 1zm16.86.27a5.08 5.08 0 013.88-1.94c1.94 0 3.92 1.16 3.92 5.06s-2.28 5.29-4.39 5.29a4.7 4.7 0 01-3.41-1.2v4.36h-1V76h.45c.43 0 .53.12.53 1zm0 1v5.31a4 4 0 003.22 1.32c1.69 0 3.57-.89 3.57-4.41s-1.65-4.36-3.08-4.36a4.93 4.93 0 00-3.71 2.1zm15.82 6a4.37 4.37 0 01-3.49 1.49c-1.9 0-3.3-1-3.3-3s1.71-3 4.1-3a11 11 0 012.69.31v-1.8c0-1.59-1-2.16-2.51-2.16a5 5 0 00-3.18.91h-.41v-.81a7.27 7.27 0 013.63-.88c2.08 0 3.45.76 3.45 2.88v7.45h-.28c-.56 0-.7-.18-.7-1zm0-.94v-2.51A11.64 11.64 0 00281 81c-1.8 0-3.16.64-3.16 2.21a2.13 2.13 0 002.44 2.27 4 4 0 003.32-1.63zm4.7-6.26a7.29 7.29 0 014.49-1.74c1.43 0 2.65.59 2.65 2.72v7.61h-1v-7.49c0-1.62-.88-2-2-2a7.21 7.21 0 00-4.12 1.73v7.78h-1V76h.45c.43 0 .53.12.53 1zM299.58 89l1.54-3.57-4.07-9.21V76h.9l3.64 8.35 3.47-8.35h.94v.29l-5.51 13.1h-.86z"/></svg></a></div><div class="navbar-right"><div class="navbar-toggle"><span class="sr-only" id="toggle-btn">Toggle Navbar</span><button class="navbar-toggle" data-toggle="#mainNav" data-toggle-global
+                        aria-labelledby="toggle-btn"><span class="navbar-toggle--top"></span><span class="navbar-toggle--middle"></span><span class="navbar-toggle--bottom"></span></button></div><div class="navbar-nav" id="mainNav" data-toggle-animate><div class="nav-top"><div class="nav-top__item"><ul class="meta-nav"><li class="meta-nav__item"><a class="meta-nav__link" href="/career/">Career</a></li><li class="meta-nav__item"><a class="meta-nav__link" href="/about-us/">About us</a></li><li class="meta-nav__item"><a class="meta-nav__link" href="/contact/">Contact</a></li></ul></div><div class="nav-top__item"><ul id="language-nav" class="language-nav language-nav--0"><li class="language-nav__item language-nav__item--dropdown" data-toggle-hover><a class="language-nav__link language-nav__link--dropdown language-nav__link--active" href="#" data-toggle-media data-toggle="#languageNav" aria-expanded="false" data-toggle-group="navbar">
+                            EN
+                        </a><div class="language-nav__dropdown" id="languageNav" data-toggle-animate><ul class="language-nav language-nav--1"><li class="language-nav__item"><a class="language-nav__link" href="/de/blog/detail/windows-privilege-escalation-an-approach-for-penetration-testers/" hreflang="de-AT" title="German">
+                                                        DE
+                                                    </a></li></ul></div></li></ul></div><div class="nav-top__item"><div class="nav-search"><button class="nav-search__toggle"
+        data-toggle-media
+        data-toggle-global
+        data-toggle="#searchContainer"
+        type="button"
+        aria-label="Toggle Search"><span class="i-search"></span><span class="i-close"></span></button><div id="searchContainer" class="nav-search__container" data-toggle-animate><form id="searchForm"
+            class="nav-search__form"
+            action="/search/?tx_indexedsearch_pi2%5Baction%5D=search&amp;tx_indexedsearch_pi2%5Bcontroller%5D=Search&amp;cHash=77911c8870a4a0f5181542ef7c94e6ea"
+            method="post"><label class="label nav-search__label" id="input-label" for="input-id" aria-label="Search"><span class="sr-only">Search</span><input type="text"
+                    id="input-id"
+                    class="input__field nav-search__input"
+                    name="tx_indexedsearch_pi2[search][sword]"
+                    placeholder="Enter search term"></label><button type="submit" class="nav-search__submit" aria-label="Search"><span class="i-search"></span></button></form></div></div></div></div><div class="nav-bottom"><ul class="main-nav main-nav--0" role="menu"><li class="main-nav__item main-nav__item--0 main-nav__item--dropdown" role="none" data-toggle-hover><span class="main-nav__link main-nav__link--no-link main-nav__link--0" tabindex="0"
+                            role="menuitem"  data-toggle-media data-toggle='#dropdown9' aria-expanded='false' data-toggle-group='navbar'
+                            >
+                            Security Testing
+                        </span><button class="main-nav__mobile-toggle" type="button" data-toggle-no-media data-toggle="#dropdown9" aria-expanded="false"><span class="i-down-open"></span></button><div class="main-nav__dropdown main-nav__dropdown--0" id="dropdown9" data-toggle-animate><ul class="main-nav main-nav--1"><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/web-application-security/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Web Application Security
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/penetration-testing/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Penetration Testing
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/mobile-security/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Mobile Security
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/it-infrastructure-security/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        IT Infrastructure Security
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/security-for-sap-services/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Security for SAP Services
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/iot-and-embedded-systems-security/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        IoT and Embedded Systems Security
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/red-teaming/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Red Teaming
+                                    </a></li></ul></div></li><li class="main-nav__item main-nav__item--0 main-nav__item--dropdown" role="none" data-toggle-hover><span class="main-nav__link main-nav__link--no-link main-nav__link--0" tabindex="0"
+                            role="menuitem"  data-toggle-media data-toggle='#dropdown20' aria-expanded='false' data-toggle-group='navbar'
+                            >
+                            Processes &amp; Organisation
+                        </span><button class="main-nav__mobile-toggle" type="button" data-toggle-no-media data-toggle="#dropdown20" aria-expanded="false"><span class="i-down-open"></span></button><div class="main-nav__dropdown main-nav__dropdown--0" id="dropdown20" data-toggle-animate><ul class="main-nav main-nav--1"><li class="main-nav__item main-nav__item--1" role="none"><a href="/processes-organisation/information-security-management-ism/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Information Security Management (ISM)
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/processes-organisation/data-protection-security-dpm/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Data Protection Security (DPM)
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/processes-organisation/network-and-information-systems-security-nis/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Network and Information Systems Security (NIS)
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/processes-organisation/secure-software-development/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Secure Software Development Consulting
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/security-testing/red-teaming/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        Red Teaming
+                                    </a></li><li class="main-nav__item main-nav__item--1" role="none"><a href="/processes-organisation/sec-trainings/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        SEC Trainings
+                                    </a></li></ul></div></li><li class="main-nav__item main-nav__item--0 main-nav__item--dropdown" role="none" data-toggle-hover><span class="main-nav__link main-nav__link--no-link main-nav__link--0" tabindex="0"
+                            role="menuitem"  data-toggle-media data-toggle='#dropdown26' aria-expanded='false' data-toggle-group='navbar'
+                            >
+                            Incident Response
+                        </span><button class="main-nav__mobile-toggle" type="button" data-toggle-no-media data-toggle="#dropdown26" aria-expanded="false"><span class="i-down-open"></span></button><div class="main-nav__dropdown main-nav__dropdown--0" id="dropdown26" data-toggle-animate><ul class="main-nav main-nav--1"><li class="main-nav__item main-nav__item--1" role="none"><a href="/incident-response/sec-defence/"
+                                    class="main-nav__link main-nav__link--1"
+                                    >
+                                        SEC Defence
+                                    </a></li></ul></div></li><li class="main-nav__item main-nav__item--0" role="none" ><a href="/vulnerability-lab/"
+                            class="main-nav__link main-nav__link--0"
+                            role="menuitem" 
+                            >
+                            Vulnerability Lab
+                        </a></li><li class="main-nav__item main-nav__item--0" role="none" ><a href="/blog/"
+                            class="main-nav__link main-nav__link--0"
+                            role="menuitem" 
+                            >
+                            Blog
+                        </a></li></ul></div></div></div><a class="navbar-incident" href="/incident-response/sec-defence/"><div class="navbar-incident__left"><span class="i-incident"></span><br /><span>Incident?</span></div><div class="navbar-incident__right">
+                                
+                                    Breached?<br />Report an incident
+                                
+                            </div></a></nav></div></header><section role="main" itemprop="mainContentOfPage"><div class="content-wrapper"><script type="application/ld+json">{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://sec-consult.com/blog/","name":"Blog"}}]}</script><nav class="breadcrumbs-container" aria-label="Breadcrumb"><ol class="breadcrumbs"><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/" target="">
+                                Home
+                            </a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/blog/" target="">
+                                Blog
+                            </a></li><li class="breadcrumbs__item"><span class="breadcrumbs__text">Windows Privilege Escalation – An Approach For Penetration Testers</span></li></ol></nav><!--TYPO3SEARCH_begin--><section class="section section__list section__default--news_pi1"><div id="c42" class="frame frame-default frame-type-list frame-layout-0"><div class="news news-single"><div class="article" itemscope="itemscope" itemtype="http://schema.org/Article"><div class="news-detail news-detail--default"><div class="news-detail__top"><h1 itemprop="headline">Windows Privilege Escalation – An Approach For Penetration Testers</h1><time class="news-detail__date" itemprop="datePublished"
+                      datetime="2019-04-18">
+                    18.04.2019
+                </time><!-- categories --><span class="news-list-category">
+	
+		
+				research
+			
+	
+		
+				vulnerability
+			
+	
+</span><div class="news-detail__teaser news-detail__teaser--no-container" itemprop="description"><p>A pentesting expert reveals the necessary knowledge about Windows components and appropriate security mechanisms to perform attacks on the rights extension.
+</p><p>Since the early stages of operating systems, users and privileges were separated. Implemented security mechanisms prevent unauthorized access and usage of data and functions. These security mechanisms have been circumvented a number of times, which lead to steady improvements of these. Nevertheless, attackers find new vulnerabilities and security holes.</p></div><figure class="news-detail__figure"><picture><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_b9c4f7177c.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_7e18583245.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_f71b9fbde5.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_dafdc51846.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_23175bc166.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_570cfa9814.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_1fdb66431a.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_d5f697c617.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload news-detail__img" alt="Figure shows windows authority access - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3cAAAF6AQAAAACSSZxMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuJiUO+NQAAABASURBVHja7cGBAAAAAMOg+VNf4AhVAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8A6VgAAEzmam5AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_b6468ff804.png" width="887" height="378" title="" /></picture></figure></div><div class="news-detail__text" itemprop="articleBody"></div><section class="section section__text"><div id="c380" class="frame frame-default frame-type-text frame-layout-0"><header><h2 >
+                Motivation
+            </h2></header><p>The race between attackers and defenders is a continuing one. Companies must protect their data. Preventing privilege escalation attempts from&nbsp;<strong>malicious</strong>&nbsp;employees or attackers decreases the probability of a data breach.</p><p>One way to assess and improve the security level of a company’s infrastructure is by engaging security experts to&nbsp;<a href="/blog/detail/pentesting-benefits-legal-compliance-and-costs/">perform penetration tests</a>. The main objective of a penetration test is the determination of vulnerabilities within a system, network, or application to detect weaknesses that an attacker could exploit.</p><p>The starting point of this article is the complex task, which penetration testers face after acquiring low privileged access to a system. The next logical step is the&nbsp;<strong>attempt to escalate privileges</strong>&nbsp;to be fully operative on the system without any restrictions. Due to the diversity of systems, escalating privileges can be a challenging task. A great number of different operating systems, configurations, hardening levels, etc. exist. Worldwide, security experts encounter this problem during their daily work.</p><p>This post shall provide security experts with an&nbsp;<strong>overview of relevant methods and techniques</strong>&nbsp;that can be used to expand privileges on a target system and provide practical examples without claiming completeness. These methods and techniques form the basis for a systematic and practical approach, which can be used by a penetration tester during an assessment.</p></div></section><section class="section section__text"><div id="c381" class="frame frame-default frame-type-text frame-layout-0"><header><h2 >
+                Windows core components
+            </h2></header><p>Windows, compared to other operating systems, holds a market share of over 80% for desktops. It is the de-facto standard operating system of enterprises and organizations for their employees’ workstations. Microsoft offers different editions of Windows. From Windows Home, Education to Enterprise; every edition has its target audience and functions.</p><p>Furthermore, there are Windows Desktop and Windows Server versions. Windows Server supports more memory, uses CPUs more efficiently, allows more network connections than Windows Desktops and is configured to prioritize background tasks (e.g. file servers, web servers, databases) while Windows Desktop prioritizes foreground applications.</p></div></section><section class="section section__text"><div id="c383" class="frame frame-default frame-type-text frame-layout-0"><h4>Service Packs</h4><p>Service Packs combine previous patches including security fixes, performance improvements as well as support for new types of hardware. A newer Service Pack version incorporates previous Service Pack patches.</p><h4>Kernel</h4><p>The kernel contains a set of functions that provide fundamental mechanisms. It provides scheduling or synchronization, which is used by components and low-level hardware architecture. It is written in C and contains assembly code for complex tasks that require access to special registers. The kernel’s tasks include reading and writing to memory and communicating with input and network devices.&nbsp;[1]</p><h4>Registry</h4><p>The registry is a central component that contains necessary boot and system information, system-wide software settings, the security database and also per-user configuration settings.</p><p>The registry is composed of keys and values. A key is a container that can consist of keys and values. The highest level of keys is called root keys. The registry contains the following six root&nbsp;keys&nbsp;[2]:</p></div></section><section class="section section__table"><div id="c384" class="frame frame-default frame-type-table frame-layout-0"><table class="ce-table"><tbody><tr><td>
+                            
+                    
+            
+    
+
+
+        ROOT KEY
+    
+
+
+        
+                
+                        
+                                </td><td>
+                    
+            
+    
+
+
+        ABBREVATION
+    
+
+
+        
+                
+                        </td><td>
+                    
+            
+    
+
+
+        DESCRIPTION
+    
+
+
+        
+                
+                        </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_CURRENT_USER
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKCU
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores data associated with the currently logged-on user. This root key is mapped to the currently logged user’s key in HKEY_USERS
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_USERS
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKU
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores information about all the accounts on the machine
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_CLASSES_ROOT
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKCR
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores file association and Component Object Model (COM) object registration information
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_LOCAL_MACHINE
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKLM
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores system-related information and contains most keys
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_PERFORMANCE_DATA
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKCC
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores performance information
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        HKEY_CURRENT_CONFIG
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        HKPD
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Stores some information about the current hardware profile
+    
+
+
+        
+                </td></tr></tbody></table></div></section><section class="section section__textpic"><div id="c385" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/0/b/csm_sec-windows-priviledge-escalation-registry_0cab346633.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/0/b/csm_sec-windows-priviledge-escalation-registry_14ad4132e2.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/0/b/csm_sec-windows-priviledge-escalation-registry_d41b5f17f3.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/0/b/csm_sec-windows-priviledge-escalation-registry_e669793079.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-windows-priviledge-escalation-registry.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-windows-priviledge-escalation-registry.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/e/e/csm_c-sec-windows-priviledge-escalation-registry_9d07432a12.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/e/e/csm_c-sec-windows-priviledge-escalation-registry_d8754bd8b8.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA4IAAAJHAQAAAADtINV/AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuJ1IJyEIAAABXSURBVHja7cExAQAAAMKg9U9tDQ+gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPg1A60AAXYPOBkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDMtMDFUMDg6NTk6MjMrMDA6MDCLfvFPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAw+iNJ8wAAABt0RVh0aWNjOmNvcHlyaWdodABQdWJsaWMgRG9tYWlutpExWwAAACJ0RVh0aWNjOmRlc2NyaXB0aW9uAEdJTVAgYnVpbHQtaW4gc1JHQkxnQRMAAAAVdEVYdGljYzptYW51ZmFjdHVyZXIAR0lNUEyekMoAAAAOdEVYdGljYzptb2RlbABzUkdCW2BJQwAAAABJRU5ErkJggg==" data-src="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-windows-priviledge-escalation-registry.png" width="898" height="583" alt="" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><p>The registry can be accessed through Regedit.exe:</p></div></div></div></section><section class="section section__text"><div id="c386" class="frame frame-default frame-type-text frame-layout-0"><h4>Processes</h4><p>A process contains a set of resources used when executing the instance of the program [3]:</p><ul class="list-normal"><li>a private virtual address space, used to prevent a process to access or modify other processes’ or operating system data</li><li>an executable program, which is mapped into the process’ private virtual address space</li><li>a security context (called access token), which includes identification of the user, security groups, privileges, etc.</li><li>a process ID</li><li>one or more threads of execution</li></ul><h4>Jobs</h4><p>A group of processes can be managed as a unit. The object that can control this group is called job. Jobs are nameable and can be secured with certain security constraints. E.g. jobs can prevent processes from impersonating or creating processes with access tokens that contain the local administrator’s group. Furthermore, it is possible to enable the job to remove certain privileges and security IDs (SIDs) when threads are impersonated.</p><h4>Services</h4><p>Windows’ mechanism to start processes at system startup, which are not tied to an interactive user, are called Windows services. These are similar to UNIX daemon processes. An example for a user independent process is a web server. This Windows service runs independently, regardless if a user is logged on or not.</p><p>For each service, a registry key exists in HKLM\SYSTEM\CurrentControlSet\Services. The subkeys of a service’s key contain information regarding the executable file path, parameters and configuration options. If a service is configured to start from a particular account’s security context, the subkeys also contain the username.&nbsp;</p></div></section><section class="section section__textpic"><div id="c387" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/d/b/csm_sec-windows-privilege-escalation-regedit_d9b0a5fcd9.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/d/b/csm_sec-windows-privilege-escalation-regedit_1733ed4793.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/d/b/csm_sec-windows-privilege-escalation-regedit_329eb980f8.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/d/b/csm_sec-windows-privilege-escalation-regedit_9304d27eb6.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/6/8/csm_c-sec-windows-privilege-escalation-regedit_4b065b6f38.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/6/8/csm_c-sec-windows-privilege-escalation-regedit_496d46186d.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/6/8/csm_c-sec-windows-privilege-escalation-regedit_d7b50b2b1f.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/6/8/csm_c-sec-windows-privilege-escalation-regedit_c1180ec016.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Figure shows registry editor - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiYAAAChAQAAAADbn0miAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuJ1IJyEIAAAAiSURBVGje7cEBDQAAAMKg909tDjegAAAAAAAAAAAAAIAvAywGAAHwHt+uAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/d/b/csm_sec-windows-privilege-escalation-regedit_d707459cef.png" width="1100" height="322" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><p>The following figure shows a service registry key:</p></div></div></div></section><section class="section section__text"><div id="c388" class="frame frame-default frame-type-text frame-layout-0"><h4>Service Accounts</h4><p>Services run in the context of user accounts. Unless otherwise specified, a service runs under the local system account (referred to as SYSTEM or LocalSystem), which possesses the highest privileges.&nbsp;</p></div></section><section class="section section__table"><div id="c389" class="frame frame-default frame-type-table frame-layout-0"><table class="ce-table"><tbody><tr><td>
+                            
+                    
+            
+    
+
+
+        NAME
+    
+
+
+        
+                
+                        
+                                </td><td>
+                    
+            
+    
+
+
+        PRIVILEGES
+    
+
+
+        
+                
+                        </td><td>
+                    
+            
+    
+
+
+        ATTRIBUTES
+    
+
+
+        
+                
+                        </td></tr><tr><td>
+                    
+            
+    
+
+
+        Local System Account
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Can enable all privileges -&gt; Highest privileges possible
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        also called SYSTEM, Core Windows components run under this account
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Network Service Account
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Some privileges including SeImpersonate [4]
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        Used for services that authenticate to network services
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Local Service Account
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        same as Network Service Account but not for authenticating to network services
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        &nbsp;
+    
+
+
+        
+                </td></tr></tbody></table></div></section><section class="section section__text"><div id="c390" class="frame frame-default frame-type-text frame-layout-0"><h4>Startup Programs</h4><p>Startup programs (also called autoruns) are similar to services with the difference that services are managed by the Service Manager.</p></div></section><section class="section section__text"><div id="c391" class="frame frame-default frame-type-text frame-layout-0"><header><h2 >
+                Methods and techniques
+            </h2></header><p>Some important and effective local privilege escalation methods and techniques are described in this section. These have been ordered by their success rate.&nbsp;</p><h3>Outdated Software</h3><p>In a company environment, updates cannot always be deployed in a timely fashion. Compatibility, availability, resource problems, or a high number of systems are possible reasons for delayed or missing updates. This opens further vectors to escalate privileges.</p></div></section><section class="section section__textpic"><div id="c392" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/4/f/csm_sec-widows-privilege-escalation-outdated_574f5273b7.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/4/f/csm_sec-widows-privilege-escalation-outdated_8fe60474c0.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/4/f/csm_sec-widows-privilege-escalation-outdated_d5b00dc76f.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/4/f/csm_sec-widows-privilege-escalation-outdated_a3420c2e45.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/a/b/csm_c-sec-widows-privilege-escalation-outdated_0e34bd32e7.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/a/b/csm_c-sec-widows-privilege-escalation-outdated_aa8c57634e.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/a/b/csm_c-sec-widows-privilege-escalation-outdated_b2669d4042.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/a/b/csm_c-sec-widows-privilege-escalation-outdated_5affbee3c6.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Graph shows possibilities to elevate privileges by exploiting outdated software - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAABPAQAAAACo05bBAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuJ1IJyEIAAAAZSURBVEjHY2AYBaNgFIyCUTAKRsEoGPYAAAjzAAED1EDZAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/4/f/csm_sec-widows-privilege-escalation-outdated_94dd63721c.png" width="1100" height="395" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><p>The following graph depicts the possibilities to elevate privileges by exploiting outdated software:</p></div></div></div></section><section class="section section__text"><div id="c393" class="frame frame-default frame-type-text frame-layout-0"><h4>Windows Kernel</h4><p>Vulnerabilities in the Windows kernel are published from time to time of which many can be used to escalate privileges.<br> The following command can be used to retrieve installed patches and their date:</p><p><em>wmic qfe get Caption,Description,HotFixID,InstalledOn</em></p><p>Hereafter, the HotFixID (KB*) can be compared to the HotFixIDs in Microsoft’s security bulletin database. A missing HotFixID on the system means that a patch is missing and potentially an exploit can be used to escalate privileges.</p><h4>Vulnerable Applications</h4><p>Most software contains thousands of lines of code written by multiple developers. Ensuring that no vulnerabilities creep in, is virtually impossible. If a vulnerability can be used to execute arbitrary code and that application runs under high privileges, a successful exploit leads to escalated privileges. For this method, the first step is to retrieve currently installed software and their versions. Publicly available exploits for these software versions can be searched by using Google or dedicated exploit databases. If no exploits are publicly available, one might, depending on the time resources, consider developing an exploit or finding a 0-day vulnerability.</p><p>Wmic can be used to retrieve installed software and their versions:</p><p><em>wmic product get name, version</em></p><h4>Insecure&nbsp;Services</h4><p>One possible way to escalate privileges is by exploiting misconfigured services. The goal is to embed a malicious file in a high privileged service. This file will then be executed the next time the service starts and will have the same privileges as the service possesses. As most services start with SYSTEM privileges, the chance to obtain SYSTEM privileges is high.</p></div></section><section class="section section__textpic"><div id="c394" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--above textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/a/4/csm_sec-widows-privilege-escalation-insecure_857e8478c4.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/a/4/csm_sec-widows-privilege-escalation-insecure_b010a39c7b.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/a/4/csm_sec-widows-privilege-escalation-insecure_a33c986dd0.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/a/4/csm_sec-widows-privilege-escalation-insecure_5864d992f0.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/4/4/csm_c-sec-widows-privilege-escalation-insecure_3a7db77b27.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/4/4/csm_c-sec-widows-privilege-escalation-insecure_0aaff5e38e.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/4/4/csm_c-sec-widows-privilege-escalation-insecure_ce35eb6c88.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/4/4/csm_c-sec-widows-privilege-escalation-insecure_347127a591.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Graph depicts possibilities to elevate privileges by exploiting insecure services - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAAG5AQAAAAC8HZwaAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKMK21dMAAABSSURBVHja7cExAQAAAMKg9U9tDQ+gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Ne9zAAExYxxKAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/a/4/csm_sec-widows-privilege-escalation-insecure_e4619436c0.png" width="1100" height="441" title="" /></picture></figure></div><div class="textpic__text textpic__text--above textpic__text--center"><p>The following graph depicts the possibilities to elevate privileges by exploiting insecure services:</p></div></div></div></section><section class="section section__text"><div id="c395" class="frame frame-default frame-type-text frame-layout-0"><h4>Weak Service Executable or Configuration File Permissions</h4><p>Services execute the file defined in their file path. If this file can be modified by an attacker, he is able to replace it by a malicious file of his own.</p><p>Furthermore, services sometimes load configuration files. Depending on the program, it might be possible that such a configuration file can be used to execute an arbitrary file. If write permissions for such a configuration file exists, privileges can be escalated.</p><p>The following figure shows that the binary file of a service WavesSysSvc, which runs under SYSTEM privileges, can be modified by anyone of the group Users as they possess write permissions (permissions were modified in this example for demonstration purposes):</p></div></section><section class="section section__textpic"><div id="c396" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--above textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/0/6/csm_sec-widows-privilege-escalation-service_a9cbf8f863.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/0/6/csm_sec-widows-privilege-escalation-service_1c97678796.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/0/6/csm_sec-widows-privilege-escalation-service_53e8b32249.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/0/6/csm_sec-widows-privilege-escalation-service_53b4ebdf3c.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/a/e/csm_c-sec-widows-privilege-escalation-service_31ce208c71.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/a/e/csm_c-sec-widows-privilege-escalation-service_91fa97620a.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/a/e/csm_c-sec-widows-privilege-escalation-service_376884ce15.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/a/e/csm_c-sec-widows-privilege-escalation-service_c5c86e9d51.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Figure shows binary file of a service WavesSysSvc - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAACjAQAAAAC4J7ZTAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKMK21dMAAAAsSURBVHja7cEBDQAAAMKg909tDwcUAAAAAAAAAAAAAAAAAAAAAAAAAAAAcGdYgQABCuJ6fgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMIt+8U8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMDFUMDg6NTk6MjMrMDA6MDD6I0nzAAAAG3RFWHRpY2M6Y29weXJpZ2h0AFB1YmxpYyBEb21haW62kTFbAAAAInRFWHRpY2M6ZGVzY3JpcHRpb24AR0lNUCBidWlsdC1pbiBzUkdCTGdBEwAAABV0RVh0aWNjOm1hbnVmYWN0dXJlcgBHSU1QTJ6QygAAAA50RVh0aWNjOm1vZGVsAHNSR0JbYElDAAAAAElFTkSuQmCC" data-src="/fileadmin/_processed_/0/6/csm_sec-widows-privilege-escalation-service_5d1bb51139.png" width="1100" height="163" title="" /></picture></figure></div><div class="textpic__text textpic__text--above textpic__text--center"><p>The output was generated with PowerSploit’s PowerUp script using the&nbsp;<em>Get-ModifiableServiceFile</em>&nbsp;method.</p></div></div></div></section><section class="section section__text"><div id="c397" class="frame frame-default frame-type-text frame-layout-0"><h4>Weak Service Permissions</h4><p>Weak service permissions can be used to modify the binary path in a service and hereby executy arbitrary files. A real world example can be seen in another blog post by SEC Consult:&nbsp;<a href="https://www.sec-consult.com/en/blog/2017/04/what-unites-hp-philips-and-fujitsu-one-service-and-millions-of-vulnerable-devices/" target="_blank" rel="noreferrer">What unites HP, Philips and Fujitsu? One service and millions of vulnerable devices</a></p><h4>DLL Hijacking</h4><p>Windows applications usually load DLL files when started. It may happen that a DLL file does not exist and the application is unable to load it. Nevertheless,&nbsp;an application will continue to execute as long as the missing DLL is not needed.<br> In case the application uses a relative and not an absolute file path, Windows searches for the file in the following directories:</p><ul class="list-normal"><li>The directory from which the application is loaded</li><li>C:\Windows\System32</li><li>C:\Windows\System</li><li>C:\Windows</li><li>The current working directory</li><li>Directories in the system PATH environment variable</li><li>Directories in the user PATH environment variable</li></ul><p><br> The folders C:\Windows and “C:\Program Files” are usually protected as no low privileged users are able to write in these. Therefore, the highest potential for a successful DLL hijack is given when a low privileged user has write access to a directory included in the system or user PATH environment variable. A low privileged user can place a malicious DLL file with the same name as the missing DLL in one of these directories. When the application is started, this DLL file is loaded and will run under the application’s privileges.</p><p>To search for missing DLLs, PowerSploit can be used with the following script:</p><p><em><strong>Find-ProcessDLLHijack&nbsp;</strong></em></p><p>&nbsp;</p><p>Hereafter, we can check the permissions in the directories that Windows searches for DLL files:</p><p><em><strong>Find-PathDLLHijack</strong></em></p><p>&nbsp;</p><p>In the last step we can create a malicious DLL file with the following script:</p><p><em><strong>Write-HijackDll</strong></em></p><p>&nbsp;</p><p>If this is the case, we can move our malicious DLL file to the directory we have write access to. The next time the application is started, the created DLL file will be executed.</p></div></section><section class="section section__textpic"><div id="c398" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/2/c/csm_sec-widows-privilege-escalation-waves_02e117549a.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/2/c/csm_sec-widows-privilege-escalation-waves_143c559781.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/2/c/csm_sec-widows-privilege-escalation-waves_fd33e420da.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/2/c/csm_sec-widows-privilege-escalation-waves_84886c2bb8.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-waves.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-waves.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/c/f/csm_c-sec-widows-privilege-escalation-waves_6d6b8af1bf.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/c/f/csm_c-sec-widows-privilege-escalation-waves_c87b831a0e.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt=" Example of sound manager application for the WavesSysSvc service - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAfAQAAAACq2CIcAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKMK21dMAAAAMSURBVAjXY2AYqgAAALoAAf8svvAAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDMtMDFUMDg6NTk6MjMrMDA6MDCLfvFPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAw+iNJ8wAAABt0RVh0aWNjOmNvcHlyaWdodABQdWJsaWMgRG9tYWlutpExWwAAACJ0RVh0aWNjOmRlc2NyaXB0aW9uAEdJTVAgYnVpbHQtaW4gc1JHQkxnQRMAAAAVdEVYdGljYzptYW51ZmFjdHVyZXIAR0lNUEyekMoAAAAOdEVYdGljYzptb2RlbABzUkdCW2BJQwAAAABJRU5ErkJggg==" data-src="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-waves.png" width="816" height="744" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><h4>Unquoted Service Paths</h4><p>Another way to escalate privileges is to exploit the order in which Windows searches for executables based on the value defined in the ImagePath parameter of a service when this value contains spaces and is not embedded within double quotes. An example can be seen in the following figure for the WavesSysSvc service, a sound manager application that comes shipped with DELL laptops (to our knowledge this vulnerability was fixed):</p></div></div></div></section><section class="section section__text"><div id="c399" class="frame frame-default frame-type-text frame-layout-0"><p>Windows first tries to execute an executable file in the location where the first space is. E.g. the service path</p><p><em><strong>C:\Program Files\Waves\MaxxAudio\WavesSysSvc64.exe&nbsp;would</strong></em></p><p>&nbsp;</p><p>lead Windows to first search for an executable file&nbsp;<em>Program.exe&nbsp;</em>in the&nbsp;C:\&nbsp;directory:</p><p><em><strong>C:\Program.exe</strong></em></p><p>&nbsp;</p><p>This applies to every space in the unquoted service path. If this file exists, Windows executes it. If it does not exist, the subsequent path is executed. An attacker that can write to the C:\ directory would be able to place an executable file named Program.exe in the directory. The next time the service starts, this file is executed.</p><p>Major vendors sometimes deploy software with unquoted service paths. E.g. in 2017 Lenovo patched an unquoted service path in the ElanTech Touchpad Driver, which is deployed on most of their notebooks. Also, Dell fixed unquoted service paths in one of their software called Dell Active Roles in 2017.</p><p>Please note, that this technique requires write permissions for low privileged users for a directory in the service path. Normally, a low-privileged user does not have write permissions to C:\. However, there is still the chance that write permissions exist for a directory in the remaining service path.</p></div></section><section class="section section__textpic"><div id="c400" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/d/4/csm_sec-widows-privilege-escalation-pwd_b95e6cc438.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/d/4/csm_sec-widows-privilege-escalation-pwd_fd7da6b678.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/d/4/csm_sec-widows-privilege-escalation-pwd_1f60a9d6c7.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/d/4/csm_sec-widows-privilege-escalation-pwd_f1943c52be.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-pwd.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-pwd.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/1/e/csm_c-sec-widows-privilege-escalation-pwd_03711dec56.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/1/e/csm_c-sec-widows-privilege-escalation-pwd_9aa07d8b5c.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Graphic shows insecure credentials - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA4sAAAKLAQAAAAB3HyB6AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKMK21dMAAABfSURBVHja7cExAQAAAMKg9U9tBn+gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4DAkgAABLxPjNAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMIt+8U8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMDFUMDg6NTk6MjMrMDA6MDD6I0nzAAAAG3RFWHRpY2M6Y29weXJpZ2h0AFB1YmxpYyBEb21haW62kTFbAAAAInRFWHRpY2M6ZGVzY3JpcHRpb24AR0lNUCBidWlsdC1pbiBzUkdCTGdBEwAAABV0RVh0aWNjOm1hbnVmYWN0dXJlcgBHSU1QTJ6QygAAAA50RVh0aWNjOm1vZGVsAHNSR0JbYElDAAAAAElFTkSuQmCC" data-src="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-pwd.png" width="907" height="651" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><h4>Insecure Credentials</h4><p>Finding a clear-text password or guessing it may allow for authentication as another user.</p><p>The following graph depicts the possibilities to elevate privileges by attacking insecure credentials:</p></div></div></div></section><section class="section section__text"><div id="c401" class="frame frame-default frame-type-text frame-layout-0"><h4>Clear-text Passwords</h4><p>In the process of automating different tasks, system administrators often knowingly or unknowingly write clear-text passwords in files or in the registry of accounts, which are used for authenticating to different services.</p><p>One example is that when administrators want to deploy images on a large number of devices without user interaction (called unattended installations) they use the Windows Deployment Services. However, this requires that the local system administrator’s password or other, privileged account passwords are stored in one or more of the following locations:</p><ul class="list-normal"><li>C:\unattend.xml</li><li>C:\Windows\Panther\Unattend.xml</li><li>C:\Windows\Panther\Unattend\Unattend.xml</li><li>C:\Windows\system32\sysprep.inf</li><li>C:\Windows\system32\sysprep\sysprep.xml</li></ul><p>As an example, the following CMD commands can be used to search for passwords in configuration files:</p><p><em><strong>findstr /si password passwd *.txt<br> findstr /si password passwd *.xml<br> findstr /si password passwd *.ini<br> findstr /si password passwd *.dat</strong></em></p><p>&nbsp;</p><p>Furthermore, the following PowerSploit scripts can be used:</p><p><em><strong>Get-UnattendedInstallFile<br> Get-Webconfig<br> Get-ApplicationHost<br> Get-SiteListPassword<br> Get-CachedGPPPassword</strong></em></p><p>&nbsp;</p><p>The following commands are used to search for&nbsp;passwords in&nbsp;the registry:</p><p><em><strong>reg query HKLM /f password /t REG_SZ /s<br> reg query HKLM /f passwd /t REG_SZ /s<br> reg query HKU /f password /t REG_SZ /s<br> reg query HKU /f passwd /t REG_SZ /s<br> reg query HKCU /f password /t REG_SZ /s<br> reg query HKCU /f passwd /t REG_SZ /s</strong></em></p></div></section><section class="section section__textpic"><div id="c402" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/0/4/csm_sec-widows-privilege-escalation-protection_d421dbdd2f.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/0/4/csm_sec-widows-privilege-escalation-protection_adef813ea2.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/0/4/csm_sec-widows-privilege-escalation-protection_20b2f38b90.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/0/4/csm_sec-widows-privilege-escalation-protection_ee2b35b93c.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/7/f/csm_c-sec-widows-privilege-escalation-protection_ee27da6d92.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/7/f/csm_c-sec-widows-privilege-escalation-protection_2f809fa362.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/7/f/csm_c-sec-widows-privilege-escalation-protection_9b74d093db.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/7/f/csm_c-sec-widows-privilege-escalation-protection_24abdfe792.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt=" Graphic shows possibilities of insufficient protection against physical access manipulation - SEC Consult " src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAAJVAQAAAADsc11+AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKbWx5UUAAABnSURBVHja7cEBDQAAAMKg909tDjegAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4MEQ2AAHNek+JAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/0/4/csm_sec-widows-privilege-escalation-protection_721388be73.png" width="1100" height="597" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><h4>Insufficient Physical Access Manipulation Protection</h4><p>Further privilege escalation attack vectors exist if physical access to the target system is available. This section describes how privileges can be escalated on a system, which an attacker has physical access to and which is protected insufficiently against file manipulation.<br> The following graph depicts the possibilities to elevate privileges by attacking devices which we have physical access to:</p></div></div></div></section><section class="section section__textpic"><div id="c403" class="frame frame-default frame-type-textpic frame-layout-0"><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_95315b3bc2.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_4f422551f8.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_5d33aba35e.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_e497ffda9e.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_1017423852.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_1232bb8747.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_4cb443efda.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/5/8/csm_h-sec-widows-privilege-escalation-system32_99b03d5c14.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="Figure shows windows authority access - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAAK/AQAAAABbrGWaAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKbWx5UUAAAB2SURBVHja7cEBDQAAAMKg909tDjegAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODcAH3EAAHcdoX6AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAwi37xTwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwODo1OToyMyswMDowMPojSfMAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/fileadmin/_processed_/6/7/csm_sec-widows-privilege-escalation-system32_10b1a93ef9.png" width="1100" height="703" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><h4>Missing Disk Encryption</h4><p>A machine that does not encrypt the Windows partition and allows booting from CD, USB or a pre-boot execution environment (PXE) is prone to privilege escalation through file manipulation. Such a machine can be compromised by booting a live operating system and replacing an executable file that is executed within a Windows service running with SYSTEM privileges. One example is the utilman.exe file used for input assistance (Ease of Access) at the Windows logon screen. This file can be replaced by cmd.exe. The following figure shows that a CMD with SYSTEM privileges is opened when clicking on the Ease of Access button:</p></div></div></div></section><section class="section section__text"><div id="c404" class="frame frame-default frame-type-text frame-layout-0"><h4>Disk Encryption without Pre-boot Authentication (Cold Boot Attack)</h4><p>Disk encryption software may use pre-boot authentication to ensure that a file volume is decrypted after providing a password, smartcard, etc. A number of disk encryption software load the decryption key into the RAM. If an already decrypted machine is shut down and can be booted from CD, USB or a PXE, it is possible to dump the RAM data of that machine by booting software that dumps the RAM. This is possible as RAM, although it is a volatile storage,&nbsp;does not directly erase data when it is no longer supplied with power, but it is erased gradually. The time after which RAM data is deleted can be extended to several hours by cooling the RAM, e.g. by spraying nitrogen on the RAM. Such an attack is also referred to as&nbsp;Cold Boot&nbsp;attack.</p><p>Some companies choose not to use pre-boot authentication in order to enable a PXE or to improve user experience. Here, the key is loaded into memory when booted. These machines can be started and shutdown several times. Therefore, the memory can be dumped repeatedly until it contains the decryption keys. This increases the chance of a successful key extraction. Such attacks have been demonstrated by the Princeton University research.</p></div></section><section class="section section__textpic"><div id="c405" class="frame frame-default frame-type-textpic frame-layout-0"><header><h2 >
+                Privilege escalation approach
+            </h2></header><div class="textpic"><div class="textpic__image textpic__image--below textpic__image--center"><figure class="image"><picture><source data-srcset="/fileadmin/_processed_/1/6/csm_sec-widows-privilege-escalation-phase_f036b0aa12.webp" type="image/webp" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/1/6/csm_sec-widows-privilege-escalation-phase_ac1ae56a15.webp" type="image/webp" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/1/6/csm_sec-widows-privilege-escalation-phase_eca8b9e469.webp" type="image/webp" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/1/6/csm_sec-widows-privilege-escalation-phase_80b7e9955a.webp" type="image/webp" media="(min-width: 100px)"><source data-srcset="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-phase.png" type="image/png" media="(min-width: 992px)"><source data-srcset="/fileadmin/_processed_/a/f/csm_c-sec-widows-privilege-escalation-phase_2047dab5c8.png" type="image/png" media="(min-width: 768px)"><source data-srcset="/fileadmin/_processed_/a/f/csm_c-sec-widows-privilege-escalation-phase_956ed0f35c.png" type="image/png" media="(min-width: 576px)"><source data-srcset="/fileadmin/_processed_/a/f/csm_c-sec-widows-privilege-escalation-phase_d71752732e.png" type="image/png" media="(min-width: 100px)"><img data-sizes="auto" class="lazyload" alt="3 phases of privilege escalation phase - SEC Consult" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhsAAAFMAQAAAABKP0PCAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQkuKbWx5UUAAAAtSURBVHja7cEBDQAAAMKg909tDwcUAAAAAAAAAAAAAAAAAAAAAAAAAAAAwI8BWXwAAVrDK6wAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDMtMDFUMDg6NTk6MjMrMDA6MDCLfvFPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAxVDA4OjU5OjIzKzAwOjAw+iNJ8wAAABt0RVh0aWNjOmNvcHlyaWdodABQdWJsaWMgRG9tYWlutpExWwAAACJ0RVh0aWNjOmRlc2NyaXB0aW9uAEdJTVAgYnVpbHQtaW4gc1JHQkxnQRMAAAAVdEVYdGljYzptYW51ZmFjdHVyZXIAR0lNUEyekMoAAAAOdEVYdGljYzptb2RlbABzUkdCW2BJQwAAAABJRU5ErkJggg==" data-src="/fileadmin/user_upload/sec-consult/Dynamisch/Blogartikel/2019_04/c-sec-widows-privilege-escalation-phase.png" width="1078" height="664" title="" /></picture></figure></div><div class="textpic__text textpic__text--below textpic__text--center"><p>The privilege escalation approach, which is introduced here, was developed and improved in a realistic lab environment. It consists of three phases. In the first phase of the approach, general information about the target are gathered. The next phase concludes an iterative approach with four steps where every technique and method is iterated through. The last phase is the reporting phase.</p></div></div></div></section><section class="section section__text"><div id="c406" class="frame frame-default frame-type-text frame-layout-0"><p>The main goal is to escalate to the highest privileges possible. In case no vertical privilege escalation attacks are successful, horizontal privilege escalation attacks can be conducted to possibly find new attack vectors. If a horizontal privilege escalation was successful, the approach should be started from scratch.</p><p>In every phase, it is crucial to take notes in a structured manner. A list containing all possible attack vectors ordered by the most interesting and unusual observations should be maintained to keep a good overview.</p><h3>Phase 1: General Information Gathering</h3><p>The first step is to gather general information in order to have a good overview about the system.</p><p>On what system am I? In which domain? What Windows version and SP is used? What CPU architecture does the system use?</p><p><em><strong>systeminfo</strong></em></p><p>&nbsp;</p><p>Who am I? What privileges do I have? In which groups am I?</p><p><em><strong>whoami<br> whoami /priv<br> net user %username%</strong></em></p><p>&nbsp;</p><p>Which users and groups exist? Which users are in the Administrators group?</p><p><em><strong>net user<br> net localgroup<br> net localgroup administrators</strong></em></p><p>&nbsp;</p><p>Who is currently logged in?</p><p><em><strong>qwinsta (Windows Servers)</strong></em></p><p>&nbsp;</p><p>What is the purpose of this system? What is installed on it?</p><p><em><strong>tasklist /SVC<br> netstat -ano<br> wmic product get name<br> Browse through the file system, especially the directories Program Files and&nbsp;Program Files (x86).</strong></em></p><p>&nbsp;</p><p>Which processes are running? Which ports are open? Which services are started? Which antivirus or endpoint protection software is in use?</p><p><em><strong>tasklist /SVC<br> netstat -ano<br> net start</strong></em></p><p>&nbsp;</p><p>In which networks is the system? How does the routing look like?</p><p><em><strong>ipconfig /all<br> route print</strong></em></p><p>&nbsp;</p><p>Which devices are connected to the system? Which shares are connected?</p><p><em><strong>net use<br> net share</strong></em></p><p>&nbsp;</p><h3>Phase 2: Method and Technique Iteration</h3><p>After obtaining a good overview of the system, every method and technique introduced is iterated through. While doing so, the steps described in this phase should be performed.</p><h4>Step 1: Information Gathering</h4><p>In this step, the goal is to find out whether the target system is vulnerable to the method we are currently evaluating and whether all conditions for a successful attack are given. If there is the possibility that the target system is vulnerable, we proceed to step 2.</p><h4>Step 2: Research and Development</h4><p>Research and development are a crucial step towards a working exploit. In this step, all necessary information about the attack and how it can be used against the target system should be gathered. This information allows us to develop a customized attack for the target. This has to be done carefully as minor details can be the difference between a successful exploit and a crashed system.</p><p>It is recommended to set up a test environment that is similar to the target system and develop and test the attack on it. The reason for this is that it is easier to find out why the attack fails and hereby analyze what changes have to be made. This increases the probability of successful exploitation and can be considered for more complex methods that require a number of conditions to be in place.</p><p>Sometimes, no more than one attack attempt is given as the targeted service or system would crash if the attempt is not successful. If there is no possibility to restart the service or system, a failed attack would render the attack vector useless. After crashing a process or potentially the whole system, one last option would be to ask responsible system administrators to restart the system. However, if the system or service can be restarted and the attack is known to have a good success rate, it might save time to conduct an exploitation attempt with only a small amount of research. Sometimes, several hours are put into developing and testing an attack without any success. If this is the case, it might make sense to take a step back and later on proceed developing the attack further. In the meantime, other attack vectors should be approached.</p><p>During research and development, possible security mechanisms that could prevent an attack from working should be considered. One can put himself into the position of a system administrator and ask himself what security mechanisms could have been installed. E.g. a firewall might implicitly prevent the usage of certain TCP ports. However, TCP connections to port 80 or 443 are often allowed. This should be considered when trying to create a reverse shell that connects back to your machine. Furthermore, after conducting the general information gathering phase, it should be clear which antivirus or endpoint protection software is in use. E.g. an exploit should not be detected by the antivirus software. An online virus scanner can be used, or the antivirus or endpoint protection software can be installed directly in a test environment to ensure that the exploit is not detected. If the antivirus software detects the exploit, different evasion techniques can be used.</p><p>Summarized, thoroughly conducted research allows a penetration tester to save time. Sufficient effort should be put into it.</p><h4>Step 3: Exploitation</h4><p>In this step, the attack that has been researched and developed in the previous two steps will be tested. Often, an attack will not work right away even after putting in some effort. Most times, several repetitions of the previous steps have to be carried out until a working attack is found.</p><h4>Step 4: Post-Exploitation</h4><p>Every step of the attack should be carefully documented including results from the information gathering phase. A good documentation helps system administrators or developers to fix the identified vulnerabilities as they often require understanding the whole attack process to be able to fix the issues.</p><p>Furthermore, if a monitoring system (e.g. a SIEM) is in place, it can be discussed whether the system has detected the exploit. If not, the customer should be advised to improve the monitoring activities and verify that similar attacks will be detected in the future.</p><h2>Tools</h2><p>The following table lists tools that can be used to automate steps of the approach:</p></div></section><section class="section section__table"><div id="c407" class="frame frame-default frame-type-table frame-layout-0"><table class="ce-table"><tbody><tr><td>
+                            
+                    
+            
+    
+
+
+        TOOL
+    
+
+
+        
+                
+                        
+                                </td><td>
+                    
+            
+    
+
+
+        CHECKS
+    
+
+
+        
+                
+                        </td><td>
+                    
+            
+    
+
+
+        LINK
+    
+
+
+        
+                
+                        </td></tr><tr><td>
+                    
+            
+    
+
+
+        BeRoot
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Unquoted service paths, modifiable services, startups or scheduled tasks, writable service, startup and scheduled tasks directories, writable PATH directories, AlwaysInstallElevated, unattended install files
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/AlessandroZ/BeRoot
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        JAWS
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        General information gathering, AlwaysInstallElevated, services, scheduled tasks, potentially interesting files
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/411Hall/JAWS
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Metasploit
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Modules for general information gathering, patch enumeration and exploit suggestion, a great number of software and kernel exploits, automated privilege escalation, token impersonation
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/rapid7/metasploit-framework
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        PowerSploit
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        services, DLL hijacking, AlwaysInstallElevated, autologon credentials, scheduled tasks, clear-text passwords in common files, etc.
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Sherlock
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Check missing software patches that can be used for privilege escalation
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/rasta-mouse/Sherlock
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Windows-Exploit-Suggester
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Checks for missing patches and proposes suitable exploits
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/GDSSecurity/Windows-Exploit-Suggester
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Windows-privesc-check
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        Modifiable services, service binary files, processes and modifying programs on FAT file systems
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://github.com/pentestmonkey/windows-privesc-check
+    
+
+
+        
+                </td></tr><tr><td>
+                    
+            
+    
+
+
+        Windows Sysinternals Suite
+    
+
+
+        
+                
+                        </td><td>
+            
+    
+
+
+        General information gathering
+    
+
+
+        
+                </td><td>
+            
+    
+
+
+        https://docs.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite
+    
+
+
+        
+                </td></tr></tbody></table></div></section><section class="section section__text"><div id="c408" class="frame frame-default frame-type-text frame-layout-0"><p>Please note, that these tools may also generate false positives. Therefore, a manual check has to be done.</p></div></section><section class="section section__text section--alternative-background"><div id="c409" class="frame frame-default frame-type-text frame-layout-0"><header><h2 >
+                Conclusion
+            </h2></header><p>Important privilege escalation methods and techniques were described. A systematic and practical approach to escalating privileges for penetration testers was introduced. Also, tools that can be used to automate steps of the approach were introduced.</p><p>The methods and techniques described here can&nbsp;<strong>help</strong>&nbsp;system administrators and architects to understand the functionality of privilege escalation techniques in order to prevent these and ultimately improve their infrastructure’s security. A Windows system can be – if configured with care – a&nbsp;<strong>tough challenge</strong>&nbsp;for penetration testers that want to escalate privileges. System administrators and architects have to be knowledgeable about Windows and its security mechanisms in order to be able to configure a Windows system securely. Microsoft keeps the patch time for vulnerabilities short. This decreases the chance of successful exploitation during a penetration test (or a real breach).</p><p>Overall, it can be concluded that Windows implements a great number of security mechanisms. This enables a granular configuration of privileges and access rights and herein allows the&nbsp;<strong>principle of least privilege</strong>&nbsp;to be potentially applied in an optimal way. On the other hand, the complexity of Windows configurations may impede the security of a company’s systems.</p></div></section><section class="section section__text"><div id="c410" class="frame frame-default frame-type-text frame-layout-0"><p>——————————————————</p><p>[1]&nbsp;Windows internals,&nbsp;Pavel Yosifovich et al., p. 57</p><p>[2]&nbsp;Windows internals,&nbsp;Pavel Yosifovich et al., p. 280</p><p>[3]&nbsp;Windows internals,&nbsp;Pavel Yosifovich et al., p. 5</p><p>[4] SeImpersonate can be used to use the (Rotten) Potato exploit and to possibly escalate to SYSTEM privileges:&nbsp;<a href="https://github.com/foxglovesec/RottenPotato" target="_blank" rel="noreferrer nofollow">https://github.com/foxglovesec/RottenPotato</a></p><p>EOF K. Bijjou / @2019</p></div></section><section class="section section__call_to_action"><div id="c411" class="frame frame-default frame-type-call_to_action frame-layout-0"><div class="cta"><div class="cta__left"><header><h3 >
+                Interested to work with the experts of SEC Consult?
+            </h3></header></div><div class="cta__right"><a href="/career/" class="cta__btn">
+                Send us your application
+            </a></div></div></div></section><div class="news-detail__back-link-wrap"><a class="news-detail__back-link" href="/blog/">
+                    Back
+                </a></div></div></div></div></div></section><!--TYPO3SEARCH_end--></div></section><footer class="footer"><div class="footer-top"><div class="footer__container"><div class="footer__row"><div class="footer__col footer__col--4"><nav><ul class="footer-nav"><li class="footer-nav__item"><a class="footer-nav__link" href="/legalnotice/">Legal Notice</a></li><li class="footer-nav__item"><a class="footer-nav__link" href="/privacy-statement/">Privacy Statement</a></li></ul></nav></div><div class="footer__col footer__col--8"><p class="footer-text">
+                        SEC Consult is one of the leading consultancies in the field of cyber and application security. The company specializes in information security management, security audits, penetration testing, ISO 27001 certification support, cyber defense and secure software certification. SEC Consult is part of Atos.
+                    </p></div></div></div></div><div class="footer-middle"><div class="footer__container"><div class="footer-logos"><a title="About us" href="/about-us/"><img class="lazyload" alt="bsi ISO/IEC 27001 Information Security Management CERTIFIED" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAEAQAAAABqvRjQAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQcuGO7xyHUAAAALSURBVAjXY2CAAAAACAABLyDdMQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0wMVQwNzo0MDoxNiswMDowME0i+DQAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMDFUMDc6NDA6MTYrMDA6MDA8f0CIAAAAG3RFWHRpY2M6Y29weXJpZ2h0AFB1YmxpYyBEb21haW62kTFbAAAAInRFWHRpY2M6ZGVzY3JpcHRpb24AR0lNUCBidWlsdC1pbiBzUkdCTGdBEwAAABV0RVh0aWNjOm1hbnVmYWN0dXJlcgBHSU1QTJ6QygAAAA50RVh0aWNjOm1vZGVsAHNSR0JbYElDAAAAAElFTkSuQmCC" data-src="/typo3temp/assets/_processed_/4/e/csm_bsi_0cef4aa90e.png" width="140" height="80" title="" /></a><a title="About us" href="/about-us/"><img class="lazyload" alt="ISO 27001 CREST certified" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAABQAQAAAABq8/XrAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQcuGO7xyHUAAAAQSURBVCjPY2AYBaNgFOACAAMgAAHOjxDEAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTAzLTAxVDA3OjQwOjE2KzAwOjAwTSL4NAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0wMy0wMVQwNzo0MDoxNiswMDowMDx/QIgAAAAbdEVYdGljYzpjb3B5cmlnaHQAUHVibGljIERvbWFpbraRMVsAAAAidEVYdGljYzpkZXNjcmlwdGlvbgBHSU1QIGJ1aWx0LWluIHNSR0JMZ0ETAAAAFXRFWHRpY2M6bWFudWZhY3R1cmVyAEdJTVBMnpDKAAAADnRFWHRpY2M6bW9kZWwAc1JHQltgSUMAAAAASUVORK5CYII=" data-src="/typo3temp/assets/_processed_/0/4/csm_crest_00f1456b85.png" width="67" height="80" title="" /></a><a title="About us" href="/about-us/"><img class="lazyload" alt="Great Place To Work AT certified" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAABQAQAAAAChKBEVAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQcuGZn2+OMAAAAPSURBVCjPY2AYBaOAeAAAAjAAASx75zQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDMtMDFUMDc6NDA6MTYrMDA6MDBNIvg0AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAxVDA3OjQwOjE2KzAwOjAwPH9AiAAAABt0RVh0aWNjOmNvcHlyaWdodABQdWJsaWMgRG9tYWlutpExWwAAACJ0RVh0aWNjOmRlc2NyaXB0aW9uAEdJTVAgYnVpbHQtaW4gc1JHQkxnQRMAAAAVdEVYdGljYzptYW51ZmFjdHVyZXIAR0lNUEyekMoAAAAOdEVYdGljYzptb2RlbABzUkdCW2BJQwAAAABJRU5ErkJggg==" data-src="/typo3conf/ext/sec_consult_base/Resources/Public/Images/Footer/great-place-to-work-at.png" width="47" height="80" title="" /></a><a title="About us" href="/about-us/"><img class="lazyload" alt="Great Place To Work DE certified" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAFAQAAAACoCmsPAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAnRSTlMAAHaTzTgAAAACYktHRAAB3YoTpAAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAd0SU1FB+YDAQcuGZn2+OMAAAALSURBVAjXY2CAAQAACgAB5/ja+gAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0wMVQwNzo0MDoxNiswMDowME0i+DQAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMDFUMDc6NDA6MTYrMDA6MDA8f0CIAAAAG3RFWHRpY2M6Y29weXJpZ2h0AFB1YmxpYyBEb21haW62kTFbAAAAInRFWHRpY2M6ZGVzY3JpcHRpb24AR0lNUCBidWlsdC1pbiBzUkdCTGdBEwAAABV0RVh0aWNjOm1hbnVmYWN0dXJlcgBHSU1QTJ6QygAAAA50RVh0aWNjOm1vZGVsAHNSR0JbYElDAAAAAElFTkSuQmCC" data-src="/typo3conf/ext/sec_consult_base/Resources/Public/Images/Footer/great-place-to-work-de.png" width="48" height="80" title="" /></a></div></div></div><div class="footer-bottom"><div class="footer__container"><nav><ul class="footer-social"><li class="footer-social__item"><a class="footer-social__link" title="Twitter" rel="noopener noreferrer" href="https://twitter.com/sec_consult"><span class="i-twitter"></span></a></li><li class="footer-social__item"><a class="footer-social__link" title="Linkedin" rel="noopener noreferrer" href="https://www.linkedin.com/company/sec-consult"><span class="i-linkedin"></span></a></li><li class="footer-social__item"><a class="footer-social__link" title="Xing" rel="noopener noreferrer" href="https://www.xing.com/companies/secconsultunternehmensberatunggmbh"><span class="i-xing"></span></a></li><li class="footer-social__item"><a class="footer-social__link" href="/contact/"><span class="i-mail-alt"></span></a></li></ul></nav></div></div></footer></div>
+
+<div class="tx-ls-cookie-consent">
+    
+    <div class="cookie-panel" data-lscookie-panel="1">
+        <div class="cookie-panel__inner">
+            <button class="cookie-panel__close" title="Close" data-lscookie-close>
+                <span class="cookie-panel__close--one"></span>
+                <span class="cookie-panel__close--two"></span>
+            </button>
+            <div class="cookie-panel__panel">
+                <h2 class="c-p-header">We use Cookies</h2>
+                <div class="c-p-description">
+                    <p>We use cookies to offer you a perfect visit experience. These include cookies that are necessary for the operation of the site and for the control of our commercial corporate goals, as well as those that are only used for anonymous statistical purposes, for convenience settings or to display personalized content. Decide for yourself which categories you want to allow. Please note that based on your settings, not all functions of the site may be available.</p>
+<p><strong><a href="/legalnotice/">Legal Notice</a></strong><strong>&nbsp;</strong> •&nbsp; <strong><a href="/privacy-statement/">Privacy Statement</a></strong></p>
+                </div>
+                
+                <form class="c-p-selection">
+                    
+                        <div class="c-p-group">
+                            <div class="c-p-group__header">
+                                <div class="c-p-group__header-left">
+                                    <div class="c-p-group__name">
+                                        <h3>
+                                            Technically required
+                                        </h3>
+                                        <span>
+                                            (
+                                                0
+                                                Service
+                                            )
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="c-p-group__header-right">
+                                    <div class="checkbox checkbox--labeled-slider checkbox--disabled">
+                                        <span>no</span>
+                                        <input
+                                            class="checkbox-input"
+                                            autocomplete="off" data-lscookie-grp="group-1" id="group-1" type="checkbox"
+                                            checked disabled value="group-1" />
+                                        <label class="checkbox-label--switch" for="group-1">
+                                            <span class="sr-only">
+                                                Technically required (
+                                                0
+                                                Service
+                                                )
+                                            </span>
+                                        </label>
+                                        <div class="checkbox-slider__switch checkbox-slider__switch--labeled">
+
+                                        </div>
+                                        <span>yes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
+                        <div class="c-p-group">
+                            <div class="c-p-group__header">
+                                <div class="c-p-group__header-left">
+                                    <div class="c-p-group__name">
+                                        <h3>
+                                            Analysis / statistics
+                                        </h3>
+                                        <span>
+                                            (
+                                                1
+                                                Service
+                                            )
+                                        </span>
+                                    </div>
+                                    <p>Anonymous evaluation for troubleshooting and further development</p>
+                                </div>
+                                <div class="c-p-group__header-right">
+                                    <div class="checkbox checkbox--labeled-slider">
+                                        <span>no</span>
+                                        <input
+                                            class="checkbox-input"
+                                            autocomplete="off" data-lscookie-grp="group-2" id="group-2" type="checkbox"
+                                             value="group-2" />
+                                        <label class="checkbox-label--switch" for="group-2">
+                                            <span class="sr-only">
+                                                Analysis / statistics (
+                                                1
+                                                Service
+                                                )
+                                            </span>
+                                        </label>
+                                        <div class="checkbox-slider__switch checkbox-slider__switch--labeled">
+
+                                        </div>
+                                        <span>yes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <div class="c-p-group__cookies">
+                                    
+                                        <div class="c-p-cookie">
+                                            <div class="c-p-cookie__top">
+                                                <h4>Google Ireland Limited</h4>
+                                                <div class="checkbox checkbox--labeled-slider">
+                                                    <span>no</span>
+                                                    <input
+                                                        class="checkbox-input"
+                                                        autocomplete="off" data-lscookie-parent="group-2" data-lscookie-cookie="cookie-1" id="cookie-1"
+                                                        type="checkbox"  value="cookie-1" />
+                                                    <label class="checkbox-label--switch" for="cookie-1"><span class="sr-only">Google Ireland Limited</span></label>
+                                                    <div class="checkbox-slider__switch checkbox-slider__switch--labeled">
+                                                    </div>
+                                                    <span>yes</span>
+                                                </div>
+                                            </div>
+                                            <div class="c-p-cookie__bottom">
+                                                <span>Google Ireland Limited</span>
+                                                
+                                                    <a href="#" class="c-p-cookie__toggle" data-lscookie-toggle="#detail1">
+                                                        <span class="c-p-cookie__toggle-show">
+                                                            Show details
+                                                        </span>
+                                                        <span class="c-p-cookie__toggle-hide">
+                                                            Hide details
+                                                        </span>
+                                                    </a>
+                                                
+                                            </div>
+                                            <div class="c-p-cookie__detail" id="detail1">
+                                                <p><strong>Purpose: </strong>error analysis, statistical evaluation of our website accesses, campaign analysis, conversion tracking, retargeting<br> <strong>Processing operations: </strong>Collection of access data, data from your browser and data about the content accessed; Execution of analysis software and storage of data on your terminal device, anonymization of the data collected; Evaluation of the anonymous data in the form of statistics<br> <strong>Storage period: </strong>data on your device for up to two years.<br> <strong>Joint controller: </strong>Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland Legal basis for data processing: voluntary, consent that can be revoked at any time Consequences of non-consent: No direct impact on the functionality of the website; however limited opportunities for further development and error analysis<br> <strong>Data transfer to the USA: </strong>Your data is processed by the provider Google in the USA, which involves corresponding risks, e.g. B. a secret data access by US authorities. With your consent, you also consent to the processing of your data in the USA.</p>
+                                                <p></p>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                            
+                        </div>
+                    
+                </form>
+            </div>
+            <div class="c-p-controls">
+                <button data-lscookie-save class="c-p-btn--primary">
+                    Accept selected
+                </button>
+                <button data-lscookie-save data-lscookie-grp="all" class="c-p-btn--secondary">
+                    Accept all
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/typo3temp/assets/compressed/merged-2ed35fa9cdc51d2bc1f748df3701c280-e935496e31ab2eadf0c8252a50908869.js?1648472420"></script>
+
+
+</body>
+</html>
