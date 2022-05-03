@@ -1,0 +1,45 @@
+Running cobalt strike se
+
+service postgresql start                stop at end 
+msfdb init                              stop at end
+
+./cobaltstrike
+
+
+
+
+
+Download CS4.5 FREE and install in Kali Linux
+link download: https://www.upload-4ever.com/bicqbda6...
+====================================================
+Please do not forget to subscribe to my channel );
+====================================================
+tools red team : https://tools-redteam.blogspot.com/
+#=========================================#
+|How to run in Linux step by step:                                  |
+|unrar file CS4.5 password: x01dz                                 |
+|chmod +x start.sh && chmod +x teamserver              |
+|Run ./teamserver Ip password &                                   |
+|Run file ./start.sh                                                             |
+|Hoppy hacking                                                                  |
+#=========================================#
+Linux (Kali, Ubuntu 18.04)
+sudo apt-get update
+Install OpenJDK 11 with APT
+sudo apt-get install openjdk-11-jdk
+Make OpenJDK 11 the default:
+sudo update-java-alternatives -s java-1.11.0-openjdk-amd64
+Linux (other)
+Uninstall the current OpenJDK package(s)
+Download OpenJDK for Linux/x64 at: https://jdk.java.net/11/
+OpenJDK extract:
+tar zxvf openjdk-11.0.1_linux-x64_bin.tar.gz
+Move the OpenJDK folder to /usr/local :
+mv JDK-11.0.1 /use/local
+Add the following to ~/.bashrc
+JAVA_HOME=”https://wikikali.blogspot.com/usr/loc...
+PATH=$PATH:$JAVA_HOME/bin
+Update ~/.bashrc to make the new environment variables take effect
+source ~/.bashrc
+White Cobalt Strike
+A legitimate tool used by ethical cyber security hackers, new Cobalt Strike licenses cost $3,500 per user for a one-year license. The cost of renewing licenses is $2,500 per user per year from programmer Raphael Mudge. It is also widely used by threat actors to launch real attacks against organizations. cobalt strike beacon cobalt strike explained cobalt strike attack
