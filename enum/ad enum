@@ -15,6 +15,93 @@ LDAPdomaindump
 
 python3 ldapdomaindump.py --user <domain\\user> -p <passwd> ldap://<domain-ip> --no-json --no-grep -O data
 
+2.1
+ldapsearch
+ldapsearch -H ldap://192.168.178.29 -x -b base namingcontexts
+ldapsearch -H ldap://192.168.178.29 -x -b "dc=devconnected,dc=com"
+ldapsearch -H ldap://192.168.178.29 -x -b "dc=devconnected,dc=com"
+
+
+To search LDAP using the admin account, you have to execute the “ldapsearch” query with the “-D” option for the bind DN and the “-W” in order to be prompted for the password.
+
+$ ldapsearch -x -b <search_base> -H <ldap_host> -D <bind_dn> -W
+ldapsearch -x -b "dc=devconnected,dc=com" -H ldap://192.168.178.29 -D "cn=admin,dc=devconnected,dc=com" -W 
+
+By default, user accounts will most likely have the “account” structural object class, which can be used to narrow down all user accounts.
+
+$ ldapsearch -x -b <search_base> -H <ldap_host> -D <bind_dn> -W "objectclass=account"
+
+ldapsearch -H ldap://192.168.178.29 -x -b "dc=devconnected,dc=com" "{objectclass=person}" | grep "sAMAccountName:"
+
+For example, if you are interested only in the user CN, UID, and home directory, you would run the following LDAP search
+
+$ ldapsearch -x -b <search_base> -H <ldap_host> -D <bind_dn> -W "objectclass=account" cn uid homeDirectory
+
+In order to have multiple filters separated by “AND” operators, you have to enclose all the conditions between brackets and have a “&” character written at the beginning of the query.
+
+$ ldapsearch <previous_options> "(&(<condition_1>)(<condition_2>)...)"
+
+For example, let’s say that you want to find all entries have a “objectclass” that is equal to “account” and a “uid” that is equal to “john”, you would run the following query
+
+$ ldapsearch <previous_options> "(&(objectclass=account)(uid=john))"
+
+OR Operator using ldapsearch
+
+In order to have multiple filters separated by “OR” operators, you have to enclose all the conditions between brackets and have a “|” character written at the beginning of the query.
+
+$ ldapsearch <previous_options> "(|(<condition_1>)(<condition_2>)...)"
+
+For example, if you want to find all entries having a object class of type “account” or or type “organizationalRole”, you would run the following query
+
+$ ldapsearch <previous_options> "(|(objectclass=account)(objectclass=organizationalRole))"
+
+Negation Filters using ldapsearch
+
+In some cases, you want to negatively match some of the entries in your LDAP directory tree.
+
+In order to have a negative match filter, you have to enclose your condition(s) with a “!” character and have conditions separated by enclosing parenthesis.
+
+$ ldapsearch <previous_options> "(!(<condition_1>)(<condition_2>)...)"
+
+For example, if you want to match all entries NOT having a “cn” attribute of value “john”, you would write the following query
+
+$ ldapsearch <previous_options> "(!(cn=john))"
+
+
+To search for the LDAP configuration, use the “ldapsearch” command and specify “cn=config” as the search base for your LDAP tree.
+
+To run this search, you have to use the “-Y” option and specify “EXTERNAL” as the authentication mechanism.
+
+$ ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config 
+
+$ ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config "(objectclass=olcDatabaseConfig)"
+
+
+
+Using ldapsearch, you can add additional filters separated by “:” characters.
+
+$ ldapsearch <previous_options> "<object_type>:<op1>:<op2>:=<object_value>"
+
+For example, in order to have a search which is case sensitive, you would run the following command
+
+$ ldapsearch <previous_options> "cn:caseExactMatch:=john"
+
+
+
+The wildcard character has the same function as the asterisk you use in regex : it will be used to match any attribute starting or ending with a given substring.
+
+$ ldapsearch <previous_options> "(object_type)=*(object_value)"
+
+$ ldapsearch <previous_options> "(object_type)=(object_value)*"
+
+As an example, let’s say that you want to find all entries having an attribute “uid” starting with the letter “j”.
+
+$ ldapsearch <previous_options> "uid=jo*"
+
+
+
+
+
 
 3
 enum4linux -u <username> -p <passwd> -a <ip>                    --------- helpful without knowing password
@@ -53,4 +140,43 @@ Get-ADDomain
 Get-ADDomain -Identify <DomainName>
 (Get-ADDOmain).DomainSID 
 (Get-DomainPolicy)."system access"           
- 
+
+
+
+8
+rpcclient
+
+# Anonymous connection (-N=no pass)
+rpcclient -U “” -N <ip>
+
+# Connection with user
+rpcclient -U “user” <ip>
+
+# Get information about the DC
+srvinfo
+
+# Get information about objects such as groups (enum*)
+enumdomains
+enumdomgroups
+enumalsgroups builtin
+
+# Try to get domain password policy
+getdompwinfo
+
+# Try to enumerate different truste domains
+dsr_enumtrustdom
+
+# Get username for a defined user ?
+getusername
+
+# Query user, group etc informations
+queryuser RID
+querygroupmem519
+queryaliasmem builtin 0x220
+
+# Query info policy
+lsaquery
+
+# Convert SID to names
+lookupsids SID
+
